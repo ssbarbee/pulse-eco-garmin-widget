@@ -3,6 +3,8 @@ import Toybox.Lang;
 import Toybox.WatchUi;
 import Toybox.Communications;
 import Toybox.System;
+import Toybox.Position;
+import Toybox.Activity;
 
 class skopje_pulse_ecoApp extends Application.AppBase {
     var loading as Boolean = false;
@@ -18,7 +20,36 @@ class skopje_pulse_ecoApp extends Application.AppBase {
         // Create an instance of SensorDataRequest and make the API request
         var getAllSensorsService = new GetAllSensorsService(method(:handleOnGetAllSensorsSuccess), method(:handleOnGetAllSensorsError));
         getAllSensorsService.makeRequest();
+
+        Position.enableLocationEvents(Position.LOCATION_ONE_SHOT, method(:onPosition));
+
+        var curLoc = Activity.Info.currentLocation;
+        if (curLoc != null) {
+            var long = curLoc.toDegrees()[1].toFloat();
+            var lat = curLoc.toDegrees()[0].toFloat();
+            System.println("Activity.Latitude: " + lat); // e.g. 38.856147
+            System.println("Activity.Longitude: " + long); // e.g -94.800953
+        } else {
+            System.println("No location found"); // e.g -94.800953
+        }
     }
+
+    function onPosition(info as Position.Info) as Void {
+        var myLocation = info.position.toDegrees();
+        System.println("Latitude: " + myLocation[0]); // e.g. 38.856147
+        System.println("Longitude: " + myLocation[1]); // e.g -94.800953
+    }
+
+    function onShow() {
+        System.println("onShowFired"); // e.g -94.800953
+        Position.enableLocationEvents(Position.LOCATION_CONTINUOUS, method(:onPosition));
+    }
+
+    function onHide() {
+        System.println("onHideFired"); // e.g -94.800953
+        Position.enableLocationEvents(Position.LOCATION_DISABLE, method(:onPosition));
+    }
+
 
     // onStop() is called when your application is exiting
     function onStop(state as Dictionary?) as Void {
