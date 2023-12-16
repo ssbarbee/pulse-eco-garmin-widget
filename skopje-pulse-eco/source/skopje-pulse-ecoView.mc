@@ -41,4 +41,32 @@ class skopje_pulse_ecoView extends WatchUi.View {
     function onHide() as Void {
     }
 
+    //! Set the position
+    //! @param info Position information
+    public function updateView(viewModel as ViewModel) as Void {
+        // _lines = [] as Array<String>;
+
+        // var position = info.position;
+        // if (position != null) {
+        //     _lines.add("lat = " + position.toDegrees()[0].toString());
+        //     _lines.add("lon = " + position.toDegrees()[1].toString());
+        // }
+
+        // var speed = info.speed;
+        // if (speed != null) {
+        //     _lines.add("speed = " + speed.toString());
+        // }
+
+        // var altitude = info.altitude;
+        // if (altitude != null) {
+        //     _lines.add("alt = " + altitude.toString());
+        // }
+
+        // var heading = info.heading;
+        // if (heading != null) {
+        //     _lines.add("heading = " + heading.toString());
+        // }
+
+        WatchUi.requestUpdate();
+    }
 }

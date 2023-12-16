@@ -7,31 +7,27 @@ import Toybox.Position;
 import Toybox.Activity;
 
 class skopje_pulse_ecoApp extends Application.AppBase {
-    var loading as Boolean = false;
-    var error as Boolean = false;
-
+    private var _view as skopje_pulse_ecoView;
+    private var viewModel as ViewModel;
+    
     function initialize() {
         AppBase.initialize();
+        _view = new skopje_pulse_ecoView();
+        viewModel = new ViewModel(true, false);
+    }
+
+    // Return the initial view of your application here
+    function getInitialView() as Array<Views or InputDelegates>? {
+        return [ _view ] as Array<Views or InputDelegates>;
     }
 
     // onStart() is called on application start up
     function onStart(state as Dictionary?) as Void {
-        self.loading = true;
         // Create an instance of SensorDataRequest and make the API request
         var getAllSensorsService = new GetAllSensorsService(method(:handleOnGetAllSensorsSuccess), method(:handleOnGetAllSensorsError));
         getAllSensorsService.makeRequest();
 
-        Position.enableLocationEvents(Position.LOCATION_ONE_SHOT, method(:onPosition));
-
-        var curLoc = Activity.Info.currentLocation;
-        if (curLoc != null) {
-            var long = curLoc.toDegrees()[1].toFloat();
-            var lat = curLoc.toDegrees()[0].toFloat();
-            System.println("Activity.Latitude: " + lat); // e.g. 38.856147
-            System.println("Activity.Longitude: " + long); // e.g -94.800953
-        } else {
-            System.println("No location found"); // e.g -94.800953
-        }
+        Position.enableLocationEvents(Position.LOCATION_CONTINUOUS, method(:onPosition));
     }
 
     function onPosition(info as Position.Info) as Void {
@@ -40,37 +36,30 @@ class skopje_pulse_ecoApp extends Application.AppBase {
         System.println("Longitude: " + myLocation[1]); // e.g -94.800953
     }
 
-    function onShow() {
-        System.println("onShowFired"); // e.g -94.800953
-        Position.enableLocationEvents(Position.LOCATION_CONTINUOUS, method(:onPosition));
-    }
-
-    function onHide() {
-        System.println("onHideFired"); // e.g -94.800953
+    // onStop() is called when your application is exiting
+    function onStop(state as Dictionary?) as Void {
         Position.enableLocationEvents(Position.LOCATION_DISABLE, method(:onPosition));
     }
 
-
-    // onStop() is called when your application is exiting
-    function onStop(state as Dictionary?) as Void {
-    }
-
-    // Return the initial view of your application here
-    function getInitialView() as Array<Views or InputDelegates>? {
-        return [ new skopje_pulse_ecoView() ] as Array<Views or InputDelegates>;
-    }
-
     function handleOnGetAllSensorsSuccess(sensors as Array<SensorModel>) {
-        self.loading = false;
-        self.error = false;
         System.println("handleOnGetAllSensorsSuccess");
         System.println("handleOnGetAllSensorsSuccess" + sensors.size());
+        
+        self.viewModel.loading = false;
+        self.viewModel.error = false;
+        self.updateUi();
     }
 
     function handleOnGetAllSensorsError() {
-        self.loading = false;
-        self.error = true;
         System.println("handleOnGetAllSensorsError");
+
+        self.viewModel.loading = false;
+        self.viewModel.error = true;
+        self.updateUi();
+    }
+
+    function updateUi() {
+        // _view.updateView(self.viewModel);
     }
 }
 

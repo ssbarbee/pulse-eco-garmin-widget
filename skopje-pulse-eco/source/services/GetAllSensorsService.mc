@@ -13,8 +13,8 @@ class GetAllSensorsService {
 
     function onReceive(responseCode as Number, data as Dictionary?) as Void {
         // System.println("onReceive");
-        var sensors = new Array<SensorModel>[data.size()];
         if (responseCode == 200) {
+            var sensors = new Array<SensorModel>[data.size()];
             // Handle the response data here
             // System.println("Request Successful " + data[0]["comments"]);
             for(var i=0;i<data.size();i++) {
