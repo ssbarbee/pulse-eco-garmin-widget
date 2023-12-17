@@ -87,14 +87,30 @@ class skopje_pulse_ecoView extends WatchUi.View {
 
         var overallModel = viewModel.overallModel.values;
         if (overallModel != null) {
-            _lines.add("no2: " + overallModel.no2);
-            _lines.add("o3: " + overallModel.o3);
-            _lines.add("pm25: " + overallModel.pm25);
-            _lines.add("pm10: " + overallModel.pm10);
-            _lines.add("temperature: " + overallModel.temperature);
-            _lines.add("humidity: " + overallModel.humidity);
-            _lines.add("pressure: " + overallModel.pressure);
-            _lines.add("noise_dba: " + overallModel.noiseDba);
+            if (overallModel.no2 != null) {
+                _lines.add("no2: " + overallModel.no2);
+            }
+            if (overallModel.o3 != null) {
+                _lines.add("o3: " + overallModel.o3);
+            }
+            if (overallModel.pm25 != null) {
+                _lines.add("pm25: " + overallModel.pm25);
+            }
+            if (overallModel.pm10 != null) {
+                _lines.add("pm10: " + overallModel.pm10);
+            }
+            if (overallModel.temperature != null) {
+                _lines.add("temperature: " + overallModel.temperature);
+            }
+            if (overallModel.humidity != null) {
+                _lines.add("humidity: " + overallModel.humidity);
+            }
+            if (overallModel.pressure != null) {
+                _lines.add("pressure: " + overallModel.pressure);
+            }
+            if (overallModel.noiseDba != null) {
+                _lines.add("noise_dba: " + overallModel.noiseDba);
+            }
         }
 
         WatchUi.requestUpdate();
