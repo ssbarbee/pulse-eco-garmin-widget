@@ -13,7 +13,7 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     function initialize() {
         AppBase.initialize();
         _view = new skopje_pulse_ecoView();
-        viewModel = new ViewModel(true, false);
+        viewModel = new ViewModel(true, false, null);
     }
 
     // Return the initial view of your application here
@@ -23,9 +23,11 @@ class skopje_pulse_ecoApp extends Application.AppBase {
 
     // onStart() is called on application start up
     function onStart(state as Dictionary?) as Void {
-        // Create an instance of SensorDataRequest and make the API request
-        var getAllSensorsService = new GetAllSensorsService(method(:handleOnGetAllSensorsSuccess), method(:handleOnGetAllSensorsError));
-        getAllSensorsService.makeRequest();
+        // var getAllSensorsService = new GetAllSensorsService(method(:handleOnGetAllSensorsSuccess), method(:handleOnGetAllSensorsError));
+        // getAllSensorsService.makeRequest();
+
+        var getOverallService = new GetOverallService(method(:handleOnGetOverallSuccess), method(:handleOnGetOverallError));
+        getOverallService.makeRequest();
 
         Position.enableLocationEvents(Position.LOCATION_CONTINUOUS, method(:onPosition));
     }
@@ -44,7 +46,6 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     function handleOnGetAllSensorsSuccess(sensors as Array<SensorModel>) {
         System.println("handleOnGetAllSensorsSuccess");
         System.println("handleOnGetAllSensorsSuccess" + sensors.size());
-        
         self.viewModel.loading = false;
         self.viewModel.error = false;
         self.updateUi();
@@ -58,8 +59,25 @@ class skopje_pulse_ecoApp extends Application.AppBase {
         self.updateUi();
     }
 
+    function handleOnGetOverallSuccess(overallModel as OverallModel) {
+        System.println("handleOnGetOverallSuccess");
+        System.println("handleOnGetOverallSuccess");
+        self.viewModel.loading = false;
+        self.viewModel.error = false;
+        self.viewModel.overallModel = overallModel;
+        self.updateUi();
+    }
+
+    function handleOnGetOverallError() {
+        System.println("handleOnGetOverallError");
+
+        self.viewModel.loading = false;
+        self.viewModel.error = true;
+        self.updateUi();
+    }
+
     function updateUi() {
-        // _view.updateView(self.viewModel);
+        _view.updateView(self.viewModel);
     }
 }
 

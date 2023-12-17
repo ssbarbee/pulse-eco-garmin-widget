@@ -2,7 +2,7 @@ import Toybox.System;
 import Toybox.Communications;
 import Toybox.Lang;
 
-class GetAllSensorsService {
+class GetOverallService {
     public var onSuccess as Method;
     public var onError as Method;
 
@@ -13,27 +13,20 @@ class GetAllSensorsService {
 
     function onReceive(responseCode as Number, data as Dictionary?) as Void {
         // System.println("onReceive");
-        if (responseCode == 200) {
-            var dataSize = 0;
-            if( data != null ) {
-                dataSize = data.size();
-            }
-            var sensors = new Array<SensorModel>[dataSize];
-            // Handle the response data here
-            // System.println("Request Successful " + data[0]["comments"]);
-            for(var i=0;i<dataSize;i++) {
-                var sensorData = data[i];
-                var sensorModel = new SensorModel(
-                    sensorData["sensorId"],
-                    sensorData["position"],
-                    sensorData["type"],
-                    sensorData["description"],
-                    sensorData["comments"],
-                    sensorData["status"]
-                );
-                sensors.add(sensorModel);
-            }
-            self.onSuccess.invoke(sensors);
+        if (responseCode == 200 and data != null) {
+            var values = data["values"];
+            var overallValuesModel = new OverallValuesModel(
+                values["no2"],
+                values["o3"],
+                values["pm25"],
+                values["pm10"],
+                values["temperature"],
+                values["humidity"],
+                values["pressure"],
+                values["noiseDba"]
+            );
+            var overallModel = new OverallModel(data["cityName"], overallValuesModel);
+            self.onSuccess.invoke(overallModel);
         } else {
             System.println("Response: " + responseCode);
             self.onError.invoke();
@@ -41,7 +34,7 @@ class GetAllSensorsService {
     }
 
     function makeRequest() as Void {
-        var url = "https://skopje.pulse.eco/rest/sensor"; 
+        var url = "https://skopje.pulse.eco/rest/overall"; 
         var options = {
             :method => Communications.HTTP_REQUEST_METHOD_GET,
             :headers => {
