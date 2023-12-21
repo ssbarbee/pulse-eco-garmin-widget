@@ -13,7 +13,7 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     function initialize() {
         AppBase.initialize();
         _view = new skopje_pulse_ecoView();
-        viewModel = new ViewModel(true, false, null);
+        viewModel = new ViewModel(true, "", null);
     }
 
     // Return the initial view of your application here
@@ -47,7 +47,7 @@ class skopje_pulse_ecoApp extends Application.AppBase {
         System.println("handleOnGetAllSensorsSuccess");
         System.println("handleOnGetAllSensorsSuccess" + sensors.size());
         self.viewModel.loading = false;
-        self.viewModel.error = false;
+        self.viewModel.error = "";
         self.updateUi();
     }
 
@@ -55,7 +55,7 @@ class skopje_pulse_ecoApp extends Application.AppBase {
         System.println("handleOnGetAllSensorsError");
 
         self.viewModel.loading = false;
-        self.viewModel.error = true;
+        self.viewModel.error = "error happened...";
         self.updateUi();
     }
 
@@ -63,16 +63,16 @@ class skopje_pulse_ecoApp extends Application.AppBase {
         System.println("handleOnGetOverallSuccess");
         System.println("handleOnGetOverallSuccess");
         self.viewModel.loading = false;
-        self.viewModel.error = false;
+        self.viewModel.error = "";
         self.viewModel.overallModel = overallModel;
         self.updateUi();
     }
 
-    function handleOnGetOverallError() {
+    function handleOnGetOverallError(errorMessage as String) {
         System.println("handleOnGetOverallError");
 
         self.viewModel.loading = false;
-        self.viewModel.error = true;
+        self.viewModel.error = errorMessage;
         self.updateUi();
     }
 

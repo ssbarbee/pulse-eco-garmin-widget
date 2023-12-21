@@ -29,7 +29,11 @@ class GetOverallService {
             self.onSuccess.invoke(overallModel);
         } else {
             System.println("Response: " + responseCode);
-            self.onError.invoke();
+            var errorMessage = "Oops! Somethings wrong!";
+            if(responseCode == -104) {
+                errorMessage = "Connect WiFi!";
+            }
+            self.onError.invoke(errorMessage);
         }
     }
 

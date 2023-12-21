@@ -106,67 +106,68 @@ class skopje_pulse_ecoView extends WatchUi.View {
         }
 
         var error = viewModel.error;
-        if (error == true) {
+        if (error.length() > 0) {
              _lines = [] as Array<LineModel>;
              _lines.add(new LineModel(
-                "","error happened...","",
+                "",error,"",
                 Graphics.COLOR_WHITE, Graphics.COLOR_WHITE, Graphics.COLOR_WHITE
             ));
         }
 
-        var overallModel = viewModel.overallModel.values;
-        if (overallModel != null) {
-            if (overallModel.pm10 != null) {
-                var color = Graphics.COLOR_DK_GREEN;
-                var pm10Number = overallModel.pm10.toNumber();
-                if(pm10Number > 40) {
-                    color = Graphics.COLOR_ORANGE;
+        if(viewModel.overallModel != null) {
+            var overallModel = viewModel.overallModel.values;
+            if (overallModel != null) {
+                if (overallModel.pm10 != null) {
+                    var color = Graphics.COLOR_DK_GREEN;
+                    var pm10Number = overallModel.pm10.toNumber();
+                    if(pm10Number > 40) {
+                        color = Graphics.COLOR_ORANGE;
+                    }
+                    if(pm10Number > 80) {
+                        color = Graphics.COLOR_DK_RED;
+                    }
+                    _lines.add(new LineModel(
+                        "pm10: ",overallModel.pm10," μg/m3",
+                        Graphics.COLOR_WHITE, color, Graphics.COLOR_WHITE
+                    ));
                 }
-                if(pm10Number > 80) {
-                    color = Graphics.COLOR_DK_RED;
+                if (overallModel.pm25 != null) {
+                    var color = Graphics.COLOR_DK_GREEN;
+                    var pm25Number = overallModel.pm25.toNumber();
+                    if(pm25Number > 40) {
+                        color = Graphics.COLOR_ORANGE;
+                    }
+                    if(pm25Number > 80) {
+                        color = Graphics.COLOR_DK_RED;
+                    }
+                    _lines.add(new LineModel(
+                        "pm25: ",overallModel.pm25," μg/m3",
+                        Graphics.COLOR_WHITE, color, Graphics.COLOR_WHITE
+                    ));
                 }
-                _lines.add(new LineModel(
-                    "pm10: ",overallModel.pm10," μg/m3",
-                    Graphics.COLOR_WHITE, color, Graphics.COLOR_WHITE
-                ));
+                // if (overallModel.no2 != null) {
+                //     _lines.add("no2: " + overallModel.no2 + " µg/m3");
+                // }
+                // if (overallModel.o3 != null) {
+                //     _lines.add("o3: " + overallModel.o3 + " μg/m3");
+                // }
+                if (overallModel.temperature != null) {
+                    _lines.add(new LineModel(
+                        "temp: ",overallModel.temperature,"°C",
+                        Graphics.COLOR_WHITE, Graphics.COLOR_WHITE, Graphics.COLOR_WHITE
+                    ));
+                }
+                // if (overallModel.humidity != null) {
+                //     _lines.add("humidity: " + overallModel.humidity + "%");
+                // }
+                // if (overallModel.pressure != null) {
+                //     _lines.add("pressure: " + overallModel.pressure + " hPa");
+                // }
+                // if (overallModel.noiseDba != null) {
+                //     _lines.add("noise_dba: " + overallModel.noiseDba + " dBA");
+                // }
             }
-            if (overallModel.pm25 != null) {
-                var color = Graphics.COLOR_DK_GREEN;
-                var pm25Number = overallModel.pm25.toNumber();
-                if(pm25Number > 40) {
-                    color = Graphics.COLOR_ORANGE;
-                }
-                if(pm25Number > 80) {
-                    color = Graphics.COLOR_DK_RED;
-                }
-                 _lines.add(new LineModel(
-                    "pm25: ",overallModel.pm25," μg/m3",
-                    Graphics.COLOR_WHITE, color, Graphics.COLOR_WHITE
-                ));
-            }
-            // if (overallModel.no2 != null) {
-            //     _lines.add("no2: " + overallModel.no2 + " µg/m3");
-            // }
-            // if (overallModel.o3 != null) {
-            //     _lines.add("o3: " + overallModel.o3 + " μg/m3");
-            // }
-            if (overallModel.temperature != null) {
-                _lines.add(new LineModel(
-                    "temp: ",overallModel.temperature,"°C",
-                    Graphics.COLOR_WHITE, Graphics.COLOR_WHITE, Graphics.COLOR_WHITE
-                ));
-            }
-            // if (overallModel.humidity != null) {
-            //     _lines.add("humidity: " + overallModel.humidity + "%");
-            // }
-            // if (overallModel.pressure != null) {
-            //     _lines.add("pressure: " + overallModel.pressure + " hPa");
-            // }
-            // if (overallModel.noiseDba != null) {
-            //     _lines.add("noise_dba: " + overallModel.noiseDba + " dBA");
-            // }
         }
-        
         WatchUi.requestUpdate();
     }
 }
