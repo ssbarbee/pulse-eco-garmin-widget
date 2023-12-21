@@ -2,12 +2,34 @@ import Toybox.Graphics;
 import Toybox.WatchUi;
 import Toybox.Lang;
 
+class LineModel {
+    public var prefixText as String;
+    public var text as String;
+    public var suffixText as String;
+    public var prefixTextColor as Number;
+    public var textColor as Number;
+    public var suffixTextColor as Number;
+
+    public function initialize(prefixText as String, text as String, suffixText as String, 
+                               prefixTextColor as Number, textColor as Number, suffixTextColor as Number) {
+        self.prefixText = prefixText;
+        self.text = text;
+        self.suffixText = suffixText;
+        self.prefixTextColor = prefixTextColor;
+        self.textColor = textColor;
+        self.suffixTextColor = suffixTextColor;
+    }
+}
+
 class skopje_pulse_ecoView extends WatchUi.View {
-    private var _lines as Array<String>;
+    private var _lines as Array<LineModel>;
 
     function initialize() {
         View.initialize();
-        _lines = ["Initializing..."] as Array<String>;
+        _lines = [new LineModel(
+            "","Initializing...","",
+            Graphics.COLOR_WHITE, Graphics.COLOR_WHITE, Graphics.COLOR_WHITE
+        )] as Array<LineModel>;
     }
 
     // Load your resources here
@@ -23,9 +45,6 @@ class skopje_pulse_ecoView extends WatchUi.View {
 
     function onUpdate(dc as Dc) as Void {
         View.onUpdate(dc);
-
-        // Set background color
-        dc.setColor(Graphics.COLOR_TRANSPARENT, Graphics.COLOR_BLACK);
         dc.clear();
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
 
@@ -38,8 +57,25 @@ class skopje_pulse_ecoView extends WatchUi.View {
         y -= (_lines.size() * textHeight) / 2;
 
         for (var i = 0; i < _lines.size(); ++i) {
-            dc.drawText(x, y, font, _lines[i], Graphics.TEXT_JUSTIFY_CENTER);
-            y += textHeight;
+            if(_lines[i].prefixText.length() > 0 and _lines[i].text.length() > 0 and _lines[i].suffixText.length() > 0) {
+                dc.setColor(_lines[i].prefixTextColor, Graphics.COLOR_TRANSPARENT);
+                var prefixTextWidth = dc.getTextWidthInPixels(_lines[i].prefixText, font);
+                dc.drawText(x - prefixTextWidth, y, font, _lines[i].prefixText, Graphics.TEXT_JUSTIFY_LEFT);
+                
+                dc.setColor(_lines[i].textColor, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(x, y, font, _lines[i].text, Graphics.TEXT_JUSTIFY_LEFT);
+                
+                var textWidth = dc.getTextWidthInPixels(_lines[i].text, font);
+                dc.setColor(_lines[i].suffixTextColor, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(x + textWidth, y, font, _lines[i].suffixText, Graphics.TEXT_JUSTIFY_LEFT);
+
+                y += textHeight;
+            }
+            if(_lines[i].prefixText.length() == 0 and _lines[i].text.length() > 0 and _lines[i].suffixText.length() == 0) {
+                dc.setColor(_lines[i].textColor, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(x, y, font, _lines[i].text, Graphics.TEXT_JUSTIFY_CENTER);
+                y += textHeight;
+            }
         }
     }
     
@@ -52,7 +88,7 @@ class skopje_pulse_ecoView extends WatchUi.View {
     //! Set the position
     //! @param info Position information
     public function updateView(viewModel as ViewModel) as Void {
-        _lines = [] as Array<String>;
+        _lines = [] as Array<LineModel>;
 
         // var position = info.position;
         // if (position != null) {
@@ -62,23 +98,51 @@ class skopje_pulse_ecoView extends WatchUi.View {
 
         var loading = viewModel.loading;
         if (loading == true) {
-             _lines = [] as Array<String>;
-            _lines.add("loading...");
+             _lines = [] as Array<LineModel>;
+            _lines.add(new LineModel(
+                "","loading...","",
+                Graphics.COLOR_WHITE, Graphics.COLOR_WHITE, Graphics.COLOR_WHITE
+            ));
         }
 
         var error = viewModel.error;
         if (error == true) {
-             _lines = [] as Array<String>;
-            _lines.add("error happened...");
+             _lines = [] as Array<LineModel>;
+             _lines.add(new LineModel(
+                "","error happened...","",
+                Graphics.COLOR_WHITE, Graphics.COLOR_WHITE, Graphics.COLOR_WHITE
+            ));
         }
 
         var overallModel = viewModel.overallModel.values;
         if (overallModel != null) {
             if (overallModel.pm10 != null) {
-                _lines.add("pm10: " + overallModel.pm10 + " μg/m3");
+                var color = Graphics.COLOR_DK_GREEN;
+                var pm10Number = overallModel.pm10.toNumber();
+                if(pm10Number > 40) {
+                    color = Graphics.COLOR_ORANGE;
+                }
+                if(pm10Number > 80) {
+                    color = Graphics.COLOR_DK_RED;
+                }
+                _lines.add(new LineModel(
+                    "pm10: ",overallModel.pm10," μg/m3",
+                    Graphics.COLOR_WHITE, color, Graphics.COLOR_WHITE
+                ));
             }
             if (overallModel.pm25 != null) {
-                _lines.add("pm25: " + overallModel.pm25 + " μg/m3");
+                var color = Graphics.COLOR_DK_GREEN;
+                var pm25Number = overallModel.pm25.toNumber();
+                if(pm25Number > 40) {
+                    color = Graphics.COLOR_ORANGE;
+                }
+                if(pm25Number > 80) {
+                    color = Graphics.COLOR_DK_RED;
+                }
+                 _lines.add(new LineModel(
+                    "pm25: ",overallModel.pm25," μg/m3",
+                    Graphics.COLOR_WHITE, color, Graphics.COLOR_WHITE
+                ));
             }
             // if (overallModel.no2 != null) {
             //     _lines.add("no2: " + overallModel.no2 + " µg/m3");
@@ -87,7 +151,10 @@ class skopje_pulse_ecoView extends WatchUi.View {
             //     _lines.add("o3: " + overallModel.o3 + " μg/m3");
             // }
             if (overallModel.temperature != null) {
-                _lines.add("temperature: " + overallModel.temperature + "°C");
+                _lines.add(new LineModel(
+                    "temp: ",overallModel.temperature,"°C",
+                    Graphics.COLOR_WHITE, Graphics.COLOR_WHITE, Graphics.COLOR_WHITE
+                ));
             }
             // if (overallModel.humidity != null) {
             //     _lines.add("humidity: " + overallModel.humidity + "%");
@@ -99,7 +166,7 @@ class skopje_pulse_ecoView extends WatchUi.View {
             //     _lines.add("noise_dba: " + overallModel.noiseDba + " dBA");
             // }
         }
-
+        
         WatchUi.requestUpdate();
     }
 }
