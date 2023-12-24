@@ -1,6 +1,7 @@
 import Toybox.Graphics;
 import Toybox.WatchUi;
 import Toybox.Lang;
+import Toybox.Time;
 
 class skopje_pulse_ecoView extends WatchUi.View {
     private var _lines as Array<LineModel> = [];
@@ -75,10 +76,10 @@ class skopje_pulse_ecoView extends WatchUi.View {
             
             if(prefixText.length() == 0 and text.length() > 0 and suffixText.length() > 0) {
                 dc.setColor(textColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(x - textWidth / 2, y, font, text, Graphics.TEXT_JUSTIFY_CENTER);
+                dc.drawText(x - textWidth, y, font, text, Graphics.TEXT_JUSTIFY_LEFT);
                 
                 dc.setColor(suffixTextColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(x + textWidth / 2, y, font, suffixText, Graphics.TEXT_JUSTIFY_CENTER);
+                dc.drawText(x, y, font, suffixText, Graphics.TEXT_JUSTIFY_LEFT);
 
                 y += dc.getFontHeight(font);
             }
@@ -190,6 +191,17 @@ class skopje_pulse_ecoView extends WatchUi.View {
                         :textColor => Graphics.COLOR_LT_GRAY,
                         :font => Graphics.FONT_TINY
                     }));
+                    if(viewModel.cachedDate != null) {
+                        var moment = new Moment(viewModel.cachedDate);
+                        var cachedDate = Gregorian.info(moment, Time.FORMAT_LONG);
+                        _lines.add(new LineModel({
+                            :text => "Last updated: ",
+                            :suffixText => Lang.format("$1$:$2$:$3$", [cachedDate.hour.format("%02d"), cachedDate.min.format("%02d"), cachedDate.sec.format("%02d")]),
+                            :textColor => Graphics.COLOR_DK_GRAY,
+                            :suffixTextColor => Graphics.COLOR_LT_GRAY,
+                            :font => Graphics.FONT_XTINY
+                        }));
+                    }
                     _lines.add(new LineModel({
                         :text => "powered by",
                         :suffixText => " pulse.eco",

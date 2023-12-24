@@ -13,7 +13,7 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     function initialize() {
         AppBase.initialize();
         _view = new skopje_pulse_ecoView();
-        viewModel = new ViewModel(true, "", null);
+        viewModel = new ViewModel(true, "", null, null);
     }
 
     // Return the initial view of your application here
@@ -54,13 +54,14 @@ class skopje_pulse_ecoApp extends Application.AppBase {
         self.updateUi();
     }
 
-    function handleOnGetOverallSuccess(overallModel as OverallModel, cached as Boolean) {
+    function handleOnGetOverallSuccess(overallModel as OverallModel, cached as Boolean, cachedDate as Number) {
         if(cached == false) {
             self._view.hideProgressBar();
         }
         self.viewModel.loading = false;
         self.viewModel.error = "";
         self.viewModel.overallModel = overallModel;
+        self.viewModel.cachedDate = cachedDate;
         self.updateUi();
     }
 

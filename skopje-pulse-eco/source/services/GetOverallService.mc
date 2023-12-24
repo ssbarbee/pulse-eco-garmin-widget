@@ -40,7 +40,7 @@ class GetOverallService {
             Storage.setValue(self._CACHED_DATE_KEY, timestampNow);
             Storage.setValue(self._CACHED_DATA_KEY, data);
             var overallModel = self.mapToOverallModel(data);
-            self.onSuccess.invoke(overallModel, false);
+            self.onSuccess.invoke(overallModel, false, timestampNow);
         } else {
             var errorMessage = "Oops! Somethings wrong!";
             if(responseCode == -104) {
@@ -65,7 +65,7 @@ class GetOverallService {
         }
         if( cachedData != null ) {
             var overallModel = self.mapToOverallModel(cachedData);
-            self.onSuccess.invoke(overallModel, true);
+            self.onSuccess.invoke(overallModel, true, cachedDate);
             return;        
         }
 
