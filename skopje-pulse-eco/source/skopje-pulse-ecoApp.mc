@@ -25,7 +25,7 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     function onStart(state as Dictionary?) as Void {
         // var getAllSensorsService = new GetAllSensorsService(method(:handleOnGetAllSensorsSuccess), method(:handleOnGetAllSensorsError));
         // getAllSensorsService.makeRequest();
-        var getOverallService = new GetOverallService(method(:handleOnGetOverallSuccess), method(:handleOnGetOverallError));
+        var getOverallService = new GetOverallService(method(:handleOnGetOverallSuccess), method(:handleOnGetOverallError), method(:handleOnGetOverallLoading));
         getOverallService.makeRequest();
 
         Position.enableLocationEvents(Position.LOCATION_CONTINUOUS, method(:onPosition));
@@ -43,33 +43,32 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     }
 
     function handleOnGetAllSensorsSuccess(sensors as Array<SensorModel>) {
-        System.println("handleOnGetAllSensorsSuccess");
-        System.println("handleOnGetAllSensorsSuccess" + sensors.size());
         self.viewModel.loading = false;
         self.viewModel.error = "";
         self.updateUi();
     }
 
     function handleOnGetAllSensorsError() {
-        System.println("handleOnGetAllSensorsError");
-
         self.viewModel.loading = false;
         self.viewModel.error = "error happened...";
         self.updateUi();
     }
 
-    function handleOnGetOverallSuccess(overallModel as OverallModel) {
-        System.println("handleOnGetOverallSuccess");
-        System.println("handleOnGetOverallSuccess");
+    function handleOnGetOverallSuccess(overallModel as OverallModel, cached as Boolean) {
+        if(cached == false) {
+            self._view.hideProgressBar();
+        }
         self.viewModel.loading = false;
         self.viewModel.error = "";
         self.viewModel.overallModel = overallModel;
         self.updateUi();
     }
 
-    function handleOnGetOverallError(errorMessage as String) {
-        System.println("handleOnGetOverallError");
+    function handleOnGetOverallLoading() {
+        self._view.showProgressBar();
+    }
 
+    function handleOnGetOverallError(errorMessage as String) {
         self.viewModel.loading = false;
         self.viewModel.error = errorMessage;
         self.updateUi();

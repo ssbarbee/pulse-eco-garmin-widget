@@ -12,7 +12,6 @@ class GetAllSensorsService {
     }
 
     function onReceive(responseCode as Number, data as Dictionary?) as Void {
-        // System.println("onReceive");
         if (responseCode == 200) {
             var dataSize = 0;
             if( data != null ) {
@@ -20,7 +19,6 @@ class GetAllSensorsService {
             }
             var sensors = new Array<SensorModel>[dataSize];
             // Handle the response data here
-            // System.println("Request Successful " + data[0]["comments"]);
             for(var i=0;i<dataSize;i++) {
                 var sensorData = data[i];
                 var sensorModel = new SensorModel(
@@ -35,7 +33,6 @@ class GetAllSensorsService {
             }
             self.onSuccess.invoke(sensors);
         } else {
-            System.println("Response: " + responseCode);
             self.onError.invoke();
         }
     }

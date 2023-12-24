@@ -5,22 +5,19 @@ import Toybox.Lang;
 class skopje_pulse_ecoView extends WatchUi.View {
     private var _lines as Array<LineModel> = [];
     private var _progressBar as WatchUi.ProgressBar?;
+    // Have to delay showing progress bar until Layout has been loaded otherwise it doesnt show
+    // maybe we don't need layout?
+    private var _queuedProgressBar as Boolean = false;
     function initialize() {
         View.initialize();
-        // _lines = [new LineModel({
-        //     :prefixText => "",
-        //     :text => "Initializing...",
-        //     :suffixText => "",
-        //     :prefixTextColor => Graphics.COLOR_WHITE,
-        //     :textColor => Graphics.COLOR_WHITE,
-        //     :suffixTextColor => Graphics.COLOR_WHITE,
-        // })] as Array<LineModel>;
     }
 
     // Load your resources here
     function onLayout(dc as Dc) as Void {
         setLayout(Rez.Layouts.MainLayout(dc));
-        self.showProgressBar();
+        if(self._queuedProgressBar) {
+            self._showProgressBar();
+        }
     }
 
     // Called when this View is brought to the foreground. Restore
@@ -94,7 +91,18 @@ class skopje_pulse_ecoView extends WatchUi.View {
     function onHide() as Void {
     }
 
+    function hideProgressBar() as Void {
+        _queuedProgressBar = false;
+        if(_progressBar != null) {
+            WatchUi.popView(WatchUi.SLIDE_UP);
+        }
+    }
+
     function showProgressBar() as Void {
+        _queuedProgressBar = true;
+    }
+
+    function _showProgressBar() as Void {
         _progressBar = new WatchUi.ProgressBar(
             "Fetching...",
             null
@@ -121,10 +129,6 @@ class skopje_pulse_ecoView extends WatchUi.View {
         if (loading == true) {
             _lines = [] as Array<LineModel>;
         } else {
-            if(_progressBar != null) {
-                WatchUi.popView(WatchUi.SLIDE_UP);
-            }
-
             var error = viewModel.error;
             if (error.length() > 0) {
                 _lines = [] as Array<LineModel>;
