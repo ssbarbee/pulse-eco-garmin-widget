@@ -3,23 +3,24 @@ import Toybox.WatchUi;
 import Toybox.Lang;
 
 class skopje_pulse_ecoView extends WatchUi.View {
-    private var _lines as Array<LineModel>;
-
+    private var _lines as Array<LineModel> = [];
+    private var _progressBar as WatchUi.ProgressBar?;
     function initialize() {
         View.initialize();
-        _lines = [new LineModel({
-            :prefixText => "",
-            :text => "Initializing...",
-            :suffixText => "",
-            :prefixTextColor => Graphics.COLOR_WHITE,
-            :textColor => Graphics.COLOR_WHITE,
-            :suffixTextColor => Graphics.COLOR_WHITE,
-        })] as Array<LineModel>;
+        // _lines = [new LineModel({
+        //     :prefixText => "",
+        //     :text => "Initializing...",
+        //     :suffixText => "",
+        //     :prefixTextColor => Graphics.COLOR_WHITE,
+        //     :textColor => Graphics.COLOR_WHITE,
+        //     :suffixTextColor => Graphics.COLOR_WHITE,
+        // })] as Array<LineModel>;
     }
 
     // Load your resources here
     function onLayout(dc as Dc) as Void {
         setLayout(Rez.Layouts.MainLayout(dc));
+        self.showProgressBar();
     }
 
     // Called when this View is brought to the foreground. Restore
@@ -94,8 +95,20 @@ class skopje_pulse_ecoView extends WatchUi.View {
     function onHide() as Void {
     }
 
-    //! Set the position
-    //! @param info Position information
+    function showProgressBar() as Void {
+        _progressBar = new WatchUi.ProgressBar(
+            "Fetching...",
+            null
+        );
+        WatchUi.pushView(
+            _progressBar,
+            null,
+            WatchUi.SLIDE_DOWN
+        );
+    }
+
+    //! Update the view
+    //! @param viewModel ViewModel information
     public function updateView(viewModel as ViewModel) as Void {
         _lines = [] as Array<LineModel>;
 
@@ -107,91 +120,93 @@ class skopje_pulse_ecoView extends WatchUi.View {
 
         var loading = viewModel.loading;
         if (loading == true) {
-             _lines = [] as Array<LineModel>;
-            _lines.add(new LineModel({
-                :text => "loading..."
-            }));
-        }
+            _lines = [] as Array<LineModel>;
+        } else {
+            if(_progressBar != null) {
+                WatchUi.popView(WatchUi.SLIDE_UP);
+            }
 
-        var error = viewModel.error;
-        if (error.length() > 0) {
-             _lines = [] as Array<LineModel>;
-             _lines.add(new LineModel({
-                :text => error
-            }));
-        }
-
-        if(viewModel.overallModel != null) {
-            var overallModel = viewModel.overallModel.values;
-            if (overallModel != null) {
-                if (overallModel.pm10 != null) {
-                    var color = Graphics.COLOR_DK_GREEN;
-                    var pm10Number = overallModel.pm10.toNumber();
-                    if(pm10Number > 40) {
-                        color = Graphics.COLOR_ORANGE;
-                    }
-                    if(pm10Number > 80) {
-                        color = Graphics.COLOR_DK_RED;
-                    }
-                    _lines.add(new LineModel({
-                        :prefixText => "pm10: ",
-                        :text => overallModel.pm10,
-                        :suffixText => " μg/m3",
-                        :textColor => color
-                    }));
-                }
-                if (overallModel.pm25 != null) {
-                    var color = Graphics.COLOR_DK_GREEN;
-                    var pm25Number = overallModel.pm25.toNumber();
-                    if(pm25Number > 40) {
-                        color = Graphics.COLOR_ORANGE;
-                    }
-                    if(pm25Number > 80) {
-                        color = Graphics.COLOR_DK_RED;
-                    }
-                    _lines.add(new LineModel({
-                        :prefixText => "pm25: ",
-                        :text => overallModel.pm25,
-                        :suffixText => " μg/m3",
-                        :textColor => color
-                    }));
-                }
-                // if (overallModel.no2 != null) {
-                //     _lines.add("no2: " + overallModel.no2 + " µg/m3");
-                // }
-                // if (overallModel.o3 != null) {
-                //     _lines.add("o3: " + overallModel.o3 + " μg/m3");
-                // }
-                if (overallModel.temperature != null) {
-                    _lines.add(new LineModel({
-                        :prefixText => "temp: ",
-                        :text => overallModel.temperature,
-                        :suffixText => "°C"
-                    }));
-                }
-                // if (overallModel.humidity != null) {
-                //     _lines.add("humidity: " + overallModel.humidity + "%");
-                // }
-                // if (overallModel.pressure != null) {
-                //     _lines.add("pressure: " + overallModel.pressure + " hPa");
-                // }
-                // if (overallModel.noiseDba != null) {
-                //     _lines.add("noise_dba: " + overallModel.noiseDba + " dBA");
-                // }
+            var error = viewModel.error;
+            if (error.length() > 0) {
+                _lines = [] as Array<LineModel>;
                 _lines.add(new LineModel({
-                    :text => " ",
-                    :textColor => Graphics.COLOR_LT_GRAY,
-                    :font => Graphics.FONT_TINY
-                }));
-                _lines.add(new LineModel({
-                    :text => "powered by",
-                    :suffixText => " pulse.eco",
-                    :textColor => Graphics.COLOR_DK_GRAY,
-                    :suffixTextColor => Graphics.COLOR_LT_GRAY,
-                    :font => Graphics.FONT_XTINY
+                    :text => error
                 }));
             }
+
+            if(viewModel.overallModel != null) {
+                var overallModel = viewModel.overallModel.values;
+                if (overallModel != null) {
+                    if (overallModel.pm10 != null) {
+                        var color = Graphics.COLOR_DK_GREEN;
+                        var pm10Number = overallModel.pm10.toNumber();
+                        if(pm10Number > 40) {
+                            color = Graphics.COLOR_ORANGE;
+                        }
+                        if(pm10Number > 80) {
+                            color = Graphics.COLOR_DK_RED;
+                        }
+                        _lines.add(new LineModel({
+                            :prefixText => "pm10: ",
+                            :text => overallModel.pm10,
+                            :suffixText => " μg/m3",
+                            :textColor => color
+                        }));
+                    }
+                    if (overallModel.pm25 != null) {
+                        var color = Graphics.COLOR_DK_GREEN;
+                        var pm25Number = overallModel.pm25.toNumber();
+                        if(pm25Number > 40) {
+                            color = Graphics.COLOR_ORANGE;
+                        }
+                        if(pm25Number > 80) {
+                            color = Graphics.COLOR_DK_RED;
+                        }
+                        _lines.add(new LineModel({
+                            :prefixText => "pm25: ",
+                            :text => overallModel.pm25,
+                            :suffixText => " μg/m3",
+                            :textColor => color
+                        }));
+                    }
+                    // if (overallModel.no2 != null) {
+                    //     _lines.add("no2: " + overallModel.no2 + " µg/m3");
+                    // }
+                    // if (overallModel.o3 != null) {
+                    //     _lines.add("o3: " + overallModel.o3 + " μg/m3");
+                    // }
+                    if (overallModel.temperature != null) {
+                        _lines.add(new LineModel({
+                            :prefixText => "temp: ",
+                            :text => overallModel.temperature,
+                            :suffixText => "°C"
+                        }));
+                    }
+                    // if (overallModel.humidity != null) {
+                    //     _lines.add("humidity: " + overallModel.humidity + "%");
+                    // }
+                    // if (overallModel.pressure != null) {
+                    //     _lines.add("pressure: " + overallModel.pressure + " hPa");
+                    // }
+                    // if (overallModel.noiseDba != null) {
+                    //     _lines.add("noise_dba: " + overallModel.noiseDba + " dBA");
+                    // }
+                    _lines.add(new LineModel({
+                        :text => " ",
+                        :textColor => Graphics.COLOR_LT_GRAY,
+                        :font => Graphics.FONT_TINY
+                    }));
+                    _lines.add(new LineModel({
+                        :text => "powered by",
+                        :suffixText => " pulse.eco",
+                        :textColor => Graphics.COLOR_DK_GRAY,
+                        :suffixTextColor => Graphics.COLOR_LT_GRAY,
+                        :font => Graphics.FONT_XTINY
+                    }));
+                }
+            }
+
+            WatchUi.requestUpdate();
         }
-        WatchUi.requestUpdate();
     }
 }

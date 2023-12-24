@@ -25,7 +25,6 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     function onStart(state as Dictionary?) as Void {
         // var getAllSensorsService = new GetAllSensorsService(method(:handleOnGetAllSensorsSuccess), method(:handleOnGetAllSensorsError));
         // getAllSensorsService.makeRequest();
-
         var getOverallService = new GetOverallService(method(:handleOnGetOverallSuccess), method(:handleOnGetOverallError));
         getOverallService.makeRequest();
 
