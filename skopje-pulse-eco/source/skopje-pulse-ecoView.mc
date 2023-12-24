@@ -33,33 +33,46 @@ class skopje_pulse_ecoView extends WatchUi.View {
         dc.clear();
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
 
+        var totalTextHeight = 0;
+        for (var i = 0; i < _lines.size(); ++i) {
+            var font = _lines[i].font != null ? _lines[i].font : Graphics.FONT_TINY;
+            totalTextHeight = totalTextHeight + dc.getFontHeight(font);
+        }
+
         var x = dc.getWidth() / 2;
         var y = dc.getHeight() / 2;
-
-        var font = Graphics.FONT_TINY;
-        var textHeight = dc.getFontHeight(font);
-
-        y -= (_lines.size() * textHeight) / 2;
+        y -= totalTextHeight / 2;
 
         for (var i = 0; i < _lines.size(); ++i) {
-            if(_lines[i].prefixText.length() > 0 and _lines[i].text.length() > 0 and _lines[i].suffixText.length() > 0) {
-                dc.setColor(_lines[i].prefixTextColor, Graphics.COLOR_TRANSPARENT);
-                var prefixTextWidth = dc.getTextWidthInPixels(_lines[i].prefixText, font);
-                dc.drawText(x - prefixTextWidth, y, font, _lines[i].prefixText, Graphics.TEXT_JUSTIFY_LEFT);
-                
-                dc.setColor(_lines[i].textColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(x, y, font, _lines[i].text, Graphics.TEXT_JUSTIFY_LEFT);
-                
-                var textWidth = dc.getTextWidthInPixels(_lines[i].text, font);
-                dc.setColor(_lines[i].suffixTextColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(x + textWidth, y, font, _lines[i].suffixText, Graphics.TEXT_JUSTIFY_LEFT);
+            var font = _lines[i].font != null ? _lines[i].font : Graphics.FONT_TINY;
 
-                y += textHeight;
+            var prefixText = _lines[i].prefixText != null ? _lines[i].prefixText : "";
+            var text = _lines[i].text != null ? _lines[i].text : "";
+            var suffixText = _lines[i].suffixText != null ? _lines[i].suffixText : "";
+
+            var prefixTextColor = _lines[i].prefixTextColor != null ? _lines[i].prefixTextColor : Graphics.COLOR_WHITE;
+            var textColor = _lines[i].textColor != null ? _lines[i].textColor : Graphics.COLOR_WHITE;
+            var suffixTextColor = _lines[i].suffixTextColor != null ? _lines[i].suffixTextColor : Graphics.COLOR_WHITE;
+
+            if(prefixText.length() > 0 and text.length() > 0 and suffixText.length() > 0) {
+                dc.setColor(prefixTextColor, Graphics.COLOR_TRANSPARENT);
+                var prefixTextWidth = dc.getTextWidthInPixels(prefixText, font);
+                dc.drawText(x - prefixTextWidth, y, font, prefixText, Graphics.TEXT_JUSTIFY_LEFT);
+                
+                dc.setColor(textColor, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(x, y, font, text, Graphics.TEXT_JUSTIFY_LEFT);
+                
+                var textWidth = dc.getTextWidthInPixels(text, font);
+                dc.setColor(suffixTextColor, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(x + textWidth, y, font, suffixText, Graphics.TEXT_JUSTIFY_LEFT);
+
+                y += dc.getFontHeight(font);
             }
-            if(_lines[i].prefixText.length() == 0 and _lines[i].text.length() > 0 and _lines[i].suffixText.length() == 0) {
-                dc.setColor(_lines[i].textColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(x, y, font, _lines[i].text, Graphics.TEXT_JUSTIFY_CENTER);
-                y += textHeight;
+            
+            if(prefixText.length() == 0 and text.length() > 0 and suffixText.length() == 0) {
+                dc.setColor(textColor, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(x, y, font, text, Graphics.TEXT_JUSTIFY_CENTER);
+                y += dc.getFontHeight(font);
             }
         }
     }
@@ -85,12 +98,7 @@ class skopje_pulse_ecoView extends WatchUi.View {
         if (loading == true) {
              _lines = [] as Array<LineModel>;
             _lines.add(new LineModel({
-                :prefixText => "",
-                :text => "loading...",
-                :suffixText => "",
-                :prefixTextColor => Graphics.COLOR_WHITE,
-                :textColor => Graphics.COLOR_WHITE,
-                :suffixTextColor => Graphics.COLOR_WHITE,
+                :text => "loading..."
             }));
         }
 
@@ -98,12 +106,7 @@ class skopje_pulse_ecoView extends WatchUi.View {
         if (error.length() > 0) {
              _lines = [] as Array<LineModel>;
              _lines.add(new LineModel({
-                :prefixText => "",
-                :text => error,
-                :suffixText => "",
-                :prefixTextColor => Graphics.COLOR_WHITE,
-                :textColor => Graphics.COLOR_WHITE,
-                :suffixTextColor => Graphics.COLOR_WHITE,
+                :text => error
             }));
         }
 
@@ -123,9 +126,7 @@ class skopje_pulse_ecoView extends WatchUi.View {
                         :prefixText => "pm10: ",
                         :text => overallModel.pm10,
                         :suffixText => " μg/m3",
-                        :prefixTextColor => Graphics.COLOR_WHITE,
-                        :textColor => color,
-                        :suffixTextColor => Graphics.COLOR_WHITE,
+                        :textColor => color
                     }));
                 }
                 if (overallModel.pm25 != null) {
@@ -141,9 +142,7 @@ class skopje_pulse_ecoView extends WatchUi.View {
                         :prefixText => "pm25: ",
                         :text => overallModel.pm25,
                         :suffixText => " μg/m3",
-                        :prefixTextColor => Graphics.COLOR_WHITE,
-                        :textColor => color,
-                        :suffixTextColor => Graphics.COLOR_WHITE,
+                        :textColor => color
                     }));
                 }
                 // if (overallModel.no2 != null) {
@@ -156,10 +155,7 @@ class skopje_pulse_ecoView extends WatchUi.View {
                     _lines.add(new LineModel({
                         :prefixText => "temp: ",
                         :text => overallModel.temperature,
-                        :suffixText => "°C",
-                        :prefixTextColor => Graphics.COLOR_WHITE,
-                        :textColor => Graphics.COLOR_WHITE,
-                        :suffixTextColor => Graphics.COLOR_WHITE,
+                        :suffixText => "°C"
                     }));
                 }
                 // if (overallModel.humidity != null) {
