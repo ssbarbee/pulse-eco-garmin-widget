@@ -32,7 +32,6 @@ class skopje_pulse_ecoView extends WatchUi.View {
     function onUpdate(dc as Dc) as Void {
         View.onUpdate(dc);
         dc.clear();
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
 
         var totalTextHeight = 0;
         for (var i = 0; i < _lines.size(); ++i) {
@@ -138,14 +137,8 @@ class skopje_pulse_ecoView extends WatchUi.View {
                 var overallModel = viewModel.overallModel.values;
                 if (overallModel != null) {
                     if (overallModel.pm10 != null) {
-                        var color = Graphics.COLOR_DK_GREEN;
                         var pm10Number = overallModel.pm10.toNumber();
-                        if(pm10Number > 40) {
-                            color = Graphics.COLOR_ORANGE;
-                        }
-                        if(pm10Number > 80) {
-                            color = Graphics.COLOR_DK_RED;
-                        }
+                        var color = getPollutionColorValue(pm10Number);
                         _lines.add(new LineModel({
                             :prefixText => "pm10: ",
                             :text => overallModel.pm10,
@@ -154,14 +147,8 @@ class skopje_pulse_ecoView extends WatchUi.View {
                         }));
                     }
                     if (overallModel.pm25 != null) {
-                        var color = Graphics.COLOR_DK_GREEN;
                         var pm25Number = overallModel.pm25.toNumber();
-                        if(pm25Number > 40) {
-                            color = Graphics.COLOR_ORANGE;
-                        }
-                        if(pm25Number > 80) {
-                            color = Graphics.COLOR_DK_RED;
-                        }
+                        var color = getPollutionColorValue(pm25Number);
                         _lines.add(new LineModel({
                             :prefixText => "pm25: ",
                             :text => overallModel.pm25,
@@ -176,10 +163,13 @@ class skopje_pulse_ecoView extends WatchUi.View {
                     //     _lines.add("o3: " + overallModel.o3 + " μg/m3");
                     // }
                     if (overallModel.temperature != null) {
+                        var temperatureNumber = overallModel.temperature.toNumber();
+                        var color = getTemperatureColorValue(temperatureNumber);
                         _lines.add(new LineModel({
                             :prefixText => "temp: ",
                             :text => overallModel.temperature,
-                            :suffixText => "°C"
+                            :suffixText => "°C",
+                            :textColor => color
                         }));
                     }
                     // if (overallModel.humidity != null) {
