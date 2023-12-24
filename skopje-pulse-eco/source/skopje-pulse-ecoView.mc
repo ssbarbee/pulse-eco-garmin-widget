@@ -54,15 +54,16 @@ class skopje_pulse_ecoView extends WatchUi.View {
             var textColor = _lines[i].textColor != null ? _lines[i].textColor : Graphics.COLOR_WHITE;
             var suffixTextColor = _lines[i].suffixTextColor != null ? _lines[i].suffixTextColor : Graphics.COLOR_WHITE;
 
+            var prefixTextWidth = dc.getTextWidthInPixels(prefixText, font);
+            var textWidth = dc.getTextWidthInPixels(text, font);
+
             if(prefixText.length() > 0 and text.length() > 0 and suffixText.length() > 0) {
                 dc.setColor(prefixTextColor, Graphics.COLOR_TRANSPARENT);
-                var prefixTextWidth = dc.getTextWidthInPixels(prefixText, font);
                 dc.drawText(x - prefixTextWidth, y, font, prefixText, Graphics.TEXT_JUSTIFY_LEFT);
                 
                 dc.setColor(textColor, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(x, y, font, text, Graphics.TEXT_JUSTIFY_LEFT);
                 
-                var textWidth = dc.getTextWidthInPixels(text, font);
                 dc.setColor(suffixTextColor, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(x + textWidth, y, font, suffixText, Graphics.TEXT_JUSTIFY_LEFT);
 
@@ -72,6 +73,16 @@ class skopje_pulse_ecoView extends WatchUi.View {
             if(prefixText.length() == 0 and text.length() > 0 and suffixText.length() == 0) {
                 dc.setColor(textColor, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(x, y, font, text, Graphics.TEXT_JUSTIFY_CENTER);
+                y += dc.getFontHeight(font);
+            }
+            
+            if(prefixText.length() == 0 and text.length() > 0 and suffixText.length() > 0) {
+                dc.setColor(textColor, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(x - textWidth / 2, y, font, text, Graphics.TEXT_JUSTIFY_CENTER);
+                
+                dc.setColor(suffixTextColor, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(x + textWidth / 2, y, font, suffixText, Graphics.TEXT_JUSTIFY_CENTER);
+
                 y += dc.getFontHeight(font);
             }
         }
@@ -167,6 +178,18 @@ class skopje_pulse_ecoView extends WatchUi.View {
                 // if (overallModel.noiseDba != null) {
                 //     _lines.add("noise_dba: " + overallModel.noiseDba + " dBA");
                 // }
+                _lines.add(new LineModel({
+                    :text => " ",
+                    :textColor => Graphics.COLOR_LT_GRAY,
+                    :font => Graphics.FONT_TINY
+                }));
+                _lines.add(new LineModel({
+                    :text => "powered by",
+                    :suffixText => " pulse.eco",
+                    :textColor => Graphics.COLOR_DK_GRAY,
+                    :suffixTextColor => Graphics.COLOR_LT_GRAY,
+                    :font => Graphics.FONT_XTINY
+                }));
             }
         }
         WatchUi.requestUpdate();
