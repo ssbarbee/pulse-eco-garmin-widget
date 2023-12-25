@@ -5,3 +5,4 @@ vgcore.*
 prof_*
 .ipynb_checkpoints/
 .idea
+.DS_Store
