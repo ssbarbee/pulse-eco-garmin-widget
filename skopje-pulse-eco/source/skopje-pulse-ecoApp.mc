@@ -72,6 +72,7 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     function handleOnGetOverallError(errorMessage as String) {
         self.viewModel.loading = false;
         self.viewModel.error = errorMessage;
+        self._view.hideProgressBar();
         self.updateUi();
     }
 
