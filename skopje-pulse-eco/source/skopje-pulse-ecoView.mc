@@ -134,7 +134,8 @@ class skopje_pulse_ecoView extends WatchUi.View {
             if (error.length() > 0) {
                 _lines = [] as Array<LineModel>;
                 _lines.add(new LineModel({
-                    :text => error
+                    :text => error,
+                    :font => error.length() < 23 ? Graphics.FONT_TINY : Graphics.FONT_XTINY
                 }));
             }
 

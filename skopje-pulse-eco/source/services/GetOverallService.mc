@@ -42,10 +42,9 @@ class GetOverallService {
             var overallModel = self.mapToOverallModel(data);
             self.onSuccess.invoke(overallModel, false, timestampNow);
         } else {
-            var errorMessage = "Oops! Somethings wrong!";
-            if(responseCode == -104) {
-                errorMessage = "Connect WiFi!";
-            }
+            var message = ERROR_CODE_MESSAGES.get(responseCode);
+            var errorMessage = message != null ? message : 
+                ("Oops! Somethings wrong! " + responseCode);
             self.onError.invoke(errorMessage);
         }
     }
