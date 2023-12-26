@@ -8,19 +8,19 @@ import Toybox.Activity;
 
 class skopje_pulse_ecoApp extends Application.AppBase {
     private var _view as skopje_pulse_ecoView;
-    private var _menuDelegate as Menu2TestDelegate;
+    private var _settingsDelegate as SettingsDelegate;
     private var viewModel as ViewModel;
     
     function initialize() {
         AppBase.initialize();
         _view = new skopje_pulse_ecoView();
-        _menuDelegate = new $.Menu2TestDelegate();
+        _settingsDelegate = new SettingsDelegate();
         viewModel = new ViewModel(true, "", null, null);
     }
 
     // Return the initial view of your application here
     function getInitialView() as Array<Views or InputDelegates>? {
-        return [ _view, _menuDelegate] as Array<Views or InputDelegates>;
+        return [ _view, _settingsDelegate] as Array<Views or InputDelegates>;
     }
 
     // onStart() is called on application start up
