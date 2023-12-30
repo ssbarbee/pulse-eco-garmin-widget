@@ -1,0 +1,11 @@
+{
+  "version": "0.0.0",
+  "name": "pulse-eco-garmin-widget",
+  "devDependencies": {
+    "@markw65/prettier-plugin-monkeyc": "1.0.53",
+    "prettier": "3.1.1"
+  },
+  "scripts": {
+    "prettier:fix": "prettier --write './pulse-eco/source/**/*.mc'"
+  }
+}

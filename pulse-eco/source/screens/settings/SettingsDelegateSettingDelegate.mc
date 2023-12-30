@@ -9,8 +9,12 @@ import Toybox.Lang;
 import Toybox.WatchUi;
 
 var cityItems as Array<WatchUi.CheckboxMenuItem> = [
-    new WatchUi.CheckboxMenuItem("Skopje", null, "skopje", false, {:alignment=>WatchUi.MenuItem.MENU_ITEM_LABEL_ALIGN_LEFT}),
-    new WatchUi.CheckboxMenuItem("Strumica", null, "strumica", false, {:alignment=>WatchUi.MenuItem.MENU_ITEM_LABEL_ALIGN_LEFT})
+    new WatchUi.CheckboxMenuItem("Skopje", null, "skopje", false, {
+        :alignment => WatchUi.MenuItem.MENU_ITEM_LABEL_ALIGN_LEFT,
+    }),
+    new WatchUi.CheckboxMenuItem("Strumica", null, "strumica", false, {
+        :alignment => WatchUi.MenuItem.MENU_ITEM_LABEL_ALIGN_LEFT,
+    }),
 ];
 var selectedCity = null;
 //! This is the menu input delegate for the settings menu of the application
@@ -26,7 +30,7 @@ class SettingsDelegateSettingDelegate extends WatchUi.Menu2InputDelegate {
     //! @param item The selected menu item
     public function onSelect(item as MenuItem) as Void {
         var id = item.getId() as String;
-        if(id.equals("done")) {
+        if (id.equals("done")) {
             System.println("onSelect done");
             self.onBack();
             WatchUi.requestUpdate();
@@ -35,20 +39,22 @@ class SettingsDelegateSettingDelegate extends WatchUi.Menu2InputDelegate {
 
         var title = id.equals("city") ? "City: Data Source" : "Unknown setting";
         var items = id.equals("city") ? cityItems : [];
-        if(items.size() == 0) {
+        if (items.size() == 0) {
             WatchUi.requestUpdate();
             return;
-        } 
+        }
 
-        var checkMenu = new WatchUi.CheckboxMenu({:title=> new MenuTitle({
-            :title => title
-        })});
+        var checkMenu = new WatchUi.CheckboxMenu({
+            :title => new MenuTitle({
+                :title => title,
+            }),
+        });
 
-        for(var i = 0; i < items.size(); i++) {
+        for (var i = 0; i < items.size(); i++) {
             var citySettingValue = getCitySettingValue();
             var isOnboarded = getOnboardedValue();
             var menuItem = items[i];
-            if(isOnboarded and menuItem.getId().equals(citySettingValue)) {
+            if (isOnboarded and menuItem.getId().equals(citySettingValue)) {
                 selectedCity = menuItem.getId();
                 menuItem.setChecked(true);
             }
@@ -63,12 +69,12 @@ class SettingsDelegateSettingDelegate extends WatchUi.Menu2InputDelegate {
     public function onBack() as Void {
         var isOnboarded = getOnboardedValue();
         System.println("onBack isOnboarded: " + isOnboarded);
-        if(!isOnboarded) {
-            if(selectedCity == null) {
+        if (!isOnboarded) {
+            if (selectedCity == null) {
                 WatchUi.showToast("Select a city!", null);
                 return;
             }
-            if(selectedCity != null) {
+            if (selectedCity != null) {
                 setCityValue(selectedCity);
                 setRefreshOverall(true);
                 setOnboardedValue(true);
@@ -77,8 +83,8 @@ class SettingsDelegateSettingDelegate extends WatchUi.Menu2InputDelegate {
                 return;
             }
         }
-        if(isOnboarded) {
-            if(selectedCity != null) {
+        if (isOnboarded) {
+            if (selectedCity != null) {
                 setCityValue(selectedCity);
                 setRefreshOverall(true);
                 WatchUi.popView(WatchUi.SLIDE_DOWN);
@@ -93,7 +99,6 @@ class SettingsDelegateSettingDelegate extends WatchUi.Menu2InputDelegate {
 
 //! This is the menu input delegate shared by all the basic sub-menus in the application
 class Menu2SampleSubMenuDelegate extends WatchUi.Menu2InputDelegate {
-
     //! Constructor
     public function initialize() {
         Menu2InputDelegate.initialize();
@@ -102,7 +107,7 @@ class Menu2SampleSubMenuDelegate extends WatchUi.Menu2InputDelegate {
     //! Handle an item being selected
     //! @param item The selected menu item
     public function onSelect(item as MenuItem) as Void {
-        for(var i = 0; i < cityItems.size(); i++) {
+        for (var i = 0; i < cityItems.size(); i++) {
             cityItems[i].setChecked(item.getId().equals(cityItems[i].getId()));
         }
         selectedCity = item.getId();

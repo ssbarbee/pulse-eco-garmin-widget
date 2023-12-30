@@ -9,7 +9,7 @@ class App extends Application.AppBase {
     private var _view as AppView;
     private var _settingsDelegate as SettingsDelegate;
     private var viewModel as ViewModel;
-    
+
     function initialize() {
         AppBase.initialize();
         _view = new AppView(method(:fetchOverallData));
@@ -19,7 +19,7 @@ class App extends Application.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() as Array<Views or InputDelegates>? {
-        return [ _view, _settingsDelegate ] as Array<Views or InputDelegates>;
+        return [_view, _settingsDelegate] as Array<Views or InputDelegates>;
     }
 
     // onStart() is called on application start up
@@ -27,7 +27,7 @@ class App extends Application.AppBase {
         // var getAllSensorsService = new GetAllSensorsService(method(:handleOnGetAllSensorsSuccess), method(:handleOnGetAllSensorsError));
         // getAllSensorsService.makeRequest();
         var isOnboarded = getOnboardedValue();
-        if(isOnboarded) {
+        if (isOnboarded) {
             self.fetchOverallData();
         } else {
             self.showOnboarding();
@@ -38,8 +38,8 @@ class App extends Application.AppBase {
 
     function fetchOverallData() {
         var getOverallService = new GetOverallService(
-            method(:handleOnGetOverallSuccess), 
-            method(:handleOnGetOverallError), 
+            method(:handleOnGetOverallSuccess),
+            method(:handleOnGetOverallError),
             method(:handleOnGetOverallLoading),
             getCitySettingValue()
         );
@@ -47,9 +47,9 @@ class App extends Application.AppBase {
     }
 
     // function onPosition(info as Position.Info) as Void {
-        // var myLocation = info.position.toDegrees();
-        // System.println("Latitude: " + myLocation[0]); // e.g. 38.856147
-        // System.println("Longitude: " + myLocation[1]); // e.g -94.800953
+    // var myLocation = info.position.toDegrees();
+    // System.println("Latitude: " + myLocation[0]); // e.g. 38.856147
+    // System.println("Longitude: " + myLocation[1]); // e.g -94.800953
     // }
 
     // onStop() is called when your application is exiting
@@ -78,8 +78,12 @@ class App extends Application.AppBase {
     //     self.updateUi();
     // }
 
-    function handleOnGetOverallSuccess(overallModel as OverallModel, cached as Boolean, cachedDate as Number) {
-        if(cached == false) {
+    function handleOnGetOverallSuccess(
+        overallModel as OverallModel,
+        cached as Boolean,
+        cachedDate as Number
+    ) {
+        if (cached == false) {
             self._view.hideProgressBar();
         }
         self.viewModel.loading = false;

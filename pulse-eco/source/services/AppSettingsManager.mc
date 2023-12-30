@@ -1,4 +1,3 @@
-
 import Toybox.Application.Storage;
 import Toybox.Lang;
 
@@ -6,7 +5,7 @@ var DEFAULT_CITY_VALUE = "skopje";
 
 function getCitySettingValue() {
     var storedValue = Storage.getValue("AppSettings.city");
-    if(storedValue == null) {
+    if (storedValue == null) {
         return DEFAULT_CITY_VALUE;
     }
 
@@ -15,19 +14,19 @@ function getCitySettingValue() {
 
 function getOnboardedValue() {
     var storedValue = Storage.getValue("AppSettings.onboarded");
-    if(storedValue == null) {
+    if (storedValue == null) {
         return false;
     }
-    
+
     return storedValue;
 }
 
 function getRefreshOverall() {
     var storedValue = Storage.getValue("AppSettings.refreshOverall");
-    if(storedValue == null) {
+    if (storedValue == null) {
         return false;
     }
-    
+
     return storedValue;
 }
 

@@ -40,14 +40,14 @@ class GetOverallService {
         var timestampNow = Time.now().value();
         // System.println("onReceive");
         if (responseCode == 200 and data != null) {
-            Storage.setValue(self._CACHED_DATE_KEY + "." + self.city , timestampNow);
+            Storage.setValue(self._CACHED_DATE_KEY + "." + self.city, timestampNow);
             Storage.setValue(self._CACHED_DATA_KEY + "." + self.city, data);
             var overallModel = self.mapToOverallModel(data);
             self.onSuccess.invoke(overallModel, false, timestampNow);
         } else {
             var message = ERROR_CODE_MESSAGES.get(responseCode);
-            var errorMessage = message != null ? message : 
-                ("Oops! Somethings wrong! " + responseCode);
+            var errorMessage =
+                message != null ? message : "Oops! Somethings wrong! " + responseCode;
             self.onError.invoke(errorMessage);
         }
     }
@@ -56,8 +56,8 @@ class GetOverallService {
         var timestampNow = Time.now().value();
         var cachedDate = Storage.getValue(self._CACHED_DATE_KEY + "." + self.city);
         var cachedData = null;
-        if( cachedDate != null ) {
-            if ( timestampNow - cachedDate >= self._CACHE_DURATION_SECONDS ) {
+        if (cachedDate != null) {
+            if (timestampNow - cachedDate >= self._CACHE_DURATION_SECONDS) {
                 // expired cache
                 Storage.deleteValue(self._CACHED_DATE_KEY + "." + self.city);
                 Storage.deleteValue(self._CACHED_DATA_KEY + "." + self.city);
@@ -65,17 +65,17 @@ class GetOverallService {
                 cachedData = Storage.getValue(self._CACHED_DATA_KEY + "." + self.city);
             }
         }
-        if( cachedData != null ) {
+        if (cachedData != null) {
             var overallModel = self.mapToOverallModel(cachedData);
             self.onSuccess.invoke(overallModel, true, cachedDate);
-            return;        
+            return;
         }
 
         self.onLoading.invoke();
-        var url = "https://" + self.city + ".pulse.eco/rest/overall"; 
+        var url = "https://" + self.city + ".pulse.eco/rest/overall";
         var options = {
             :method => Communications.HTTP_REQUEST_METHOD_GET,
-            :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON 
+            :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON,
         };
 
         // Make the request

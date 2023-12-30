@@ -14,12 +14,12 @@ class GetAllSensorsService {
     function onReceive(responseCode as Number, data as Dictionary?) as Void {
         if (responseCode == 200) {
             var dataSize = 0;
-            if( data != null ) {
+            if (data != null) {
                 dataSize = data.size();
             }
             var sensors = new Array<SensorModel>[dataSize];
             // Handle the response data here
-            for(var i=0;i<dataSize;i++) {
+            for (var i = 0; i < dataSize; i++) {
                 var sensorData = data[i];
                 var sensorModel = new SensorModel(
                     sensorData["sensorId"],
@@ -38,14 +38,14 @@ class GetAllSensorsService {
     }
 
     function makeRequest() as Void {
-        var url = "https://skopje.pulse.eco/rest/sensor"; 
+        var url = "https://skopje.pulse.eco/rest/sensor";
         var options = {
             :method => Communications.HTTP_REQUEST_METHOD_GET,
             :headers => {
                 "Authorization" => "Basic c3NiYXJiZWU6NE1wY2h0NDdDYVVoazdX",
-                "Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED
+                "Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED,
             },
-            :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON 
+            :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON,
         };
 
         // Make the request

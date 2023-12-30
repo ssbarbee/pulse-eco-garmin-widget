@@ -1,0 +1,8 @@
+node_modules
+pulse-eco/bin
+*.json
+*.md
+*.yaml
+*.css
+*.mir
+*.prg

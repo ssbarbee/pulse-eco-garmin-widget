@@ -23,13 +23,19 @@ class SettingsDelegate extends WatchUi.BehaviorDelegate {
     //! @return true if handled, false otherwise
     public function onMenu() as Boolean {
         // Generate a new Menu with a drawable Title
-        var menu = new WatchUi.Menu2({:title=>new MenuTitle({
-            :title => "Fine-Tune"
-        })});
+        var menu = new WatchUi.Menu2({
+            :title => new MenuTitle({
+                :title => "Fine-Tune",
+            }),
+        });
 
         menu.addItem(new WatchUi.MenuItem("City", null, "city", null));
         menu.addItem(new WatchUi.MenuItem("Done", null, "done", null));
-        WatchUi.pushView(menu, new SettingsDelegateSettingDelegate(method(:onOnboardingFinish)), WatchUi.SLIDE_UP);
+        WatchUi.pushView(
+            menu,
+            new SettingsDelegateSettingDelegate(method(:onOnboardingFinish)),
+            WatchUi.SLIDE_UP
+        );
 
         return true;
     }
@@ -41,7 +47,7 @@ class SettingsDelegate extends WatchUi.BehaviorDelegate {
     //! Handle going to the next view
     //! @return true if handled, false otherwise
     public function onNextPage() as Boolean {
-        if(self.viewModel.overallModel == null) {
+        if (self.viewModel.overallModel == null) {
             return true;
         }
 
@@ -66,7 +72,7 @@ class DetailsDelegate extends WatchUi.BehaviorDelegate {
     //! Handle going to the next view
     //! @return true if handled, false otherwise
     public function onNextPage() as Boolean {
-        if(self.viewModel.overallModel == null) {
+        if (self.viewModel.overallModel == null) {
             return true;
         }
         System.println("Next page event");
@@ -80,7 +86,7 @@ class DetailsDelegate extends WatchUi.BehaviorDelegate {
     //! Handle going to the previous view
     //! @return true if handled, false otherwise
     public function onPreviousPage() as Boolean {
-        if(self.viewModel.overallModel == null) {
+        if (self.viewModel.overallModel == null) {
             return true;
         }
         System.println("Previous page event");
@@ -96,9 +102,12 @@ class DetailsDelegate extends WatchUi.BehaviorDelegate {
 class MenuTitle extends WatchUi.Drawable {
     public var title as String;
     //! Constructor
-    public function initialize(params as { 
-            :title as String, 
-    }) {
+    public function initialize(
+        params as
+            {
+                :title as String,
+            }
+    ) {
         self.title = params.get(:title);
         Drawable.initialize({});
     }
@@ -109,6 +118,12 @@ class MenuTitle extends WatchUi.Drawable {
         dc.clear();
 
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(dc.getWidth() / 2, dc.getHeight() / 2, Graphics.FONT_XTINY, self.title, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        dc.drawText(
+            dc.getWidth() / 2,
+            dc.getHeight() / 2,
+            Graphics.FONT_XTINY,
+            self.title,
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
+        );
     }
 }

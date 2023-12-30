@@ -10,15 +10,17 @@ class LineModel {
     public var font as Number?;
 
     public function initialize(
-        params as { 
-            :prefixText as String?, 
-            :text as String?, 
-            :suffixText as String?, 
-            :prefixTextColor as Number?,
-            :textColor as Number?,
-            :suffixTextColor as Number?,
-            :font as Number?
-        }) {
+        params as
+            {
+                :prefixText as String?,
+                :text as String?,
+                :suffixText as String?,
+                :prefixTextColor as Number?,
+                :textColor as Number?,
+                :suffixTextColor as Number?,
+                :font as Number?,
+            }
+    ) {
         self.prefixText = params.get(:prefixText);
         self.text = params.get(:text);
         self.suffixText = params.get(:suffixText);

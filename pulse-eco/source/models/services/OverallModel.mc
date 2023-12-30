@@ -10,7 +10,16 @@ class OverallValuesModel {
     public var pressure as String;
     public var noiseDba as String;
 
-    public function initialize(no2 as String, o3 as String, pm25 as String, pm10 as String, temperature as String, humidity as String, pressure as String, noiseDba as String) {
+    public function initialize(
+        no2 as String,
+        o3 as String,
+        pm25 as String,
+        pm10 as String,
+        temperature as String,
+        humidity as String,
+        pressure as String,
+        noiseDba as String
+    ) {
         self.no2 = no2;
         self.o3 = o3;
         self.pm25 = pm25;
