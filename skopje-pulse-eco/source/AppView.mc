@@ -3,7 +3,7 @@ import Toybox.WatchUi;
 import Toybox.Lang;
 import Toybox.Time;
 
-class skopje_pulse_ecoView extends WatchUi.View {
+class AppView extends WatchUi.View {
     private var _lines as Array<LineModel> = [];
     private var _progressBar as WatchUi.ProgressBar?;
     private var refreshOverall;

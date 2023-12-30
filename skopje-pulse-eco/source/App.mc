@@ -5,14 +5,14 @@ import Toybox.Communications;
 import Toybox.System;
 import Toybox.Activity;
 
-class skopje_pulse_ecoApp extends Application.AppBase {
-    private var _view as skopje_pulse_ecoView;
+class App extends Application.AppBase {
+    private var _view as AppView;
     private var _settingsDelegate as SettingsDelegate;
     private var viewModel as ViewModel;
     
     function initialize() {
         AppBase.initialize();
-        _view = new skopje_pulse_ecoView(method(:fetchOverallData));
+        _view = new AppView(method(:fetchOverallData));
         viewModel = new ViewModel(true, true, "", null, null);
         _settingsDelegate = new SettingsDelegate(viewModel);
     }
@@ -109,6 +109,6 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     }
 }
 
-function getApp() as skopje_pulse_ecoApp {
-    return Application.getApp() as skopje_pulse_ecoApp;
+function getApp() as App {
+    return Application.getApp() as App;
 }
