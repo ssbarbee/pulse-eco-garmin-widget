@@ -1,10 +1,10 @@
-# Garmin Widget for Pulse.eco - Skopje Pollution Level
+# Garmin Widget for Pulse.eco - Pollution Level
 
 ## Introduction
-This project develops a Garmin Widget that integrates with the pulse.eco REST API to provide real-time pollution levels in Skopje. Pulse.eco is a crowdsourcing platform for environmental data like air pollution, humidity, temperature, and noise.
+This project develops a Garmin Widget that integrates with the pulse.eco REST API to provide real-time pollution levels in Skopje, Strumica. Pulse.eco is a crowdsourcing platform for environmental data like air pollution, humidity, temperature, and noise.
 
 ## Features
-- Real-time pollution level data in Skopje.
+- Real-time pollution level data in Skopje, Strumica.
 - Data on air quality, temperature, and noise levels.
 - User-friendly visual representation on Garmin devices.
 
