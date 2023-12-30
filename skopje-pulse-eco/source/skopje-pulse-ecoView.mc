@@ -134,12 +134,6 @@ class skopje_pulse_ecoView extends WatchUi.View {
     public function updateView(viewModel as ViewModel) as Void {
         _lines = [] as Array<LineModel>;
 
-        // var position = info.position;
-        // if (position != null) {
-        //     _lines.add("lat = " + position.toDegrees()[0].toString());
-        //     _lines.add("lon = " + position.toDegrees()[1].toString());
-        // }
-
         var loading = viewModel.loading;
         if (loading == true) {
             _lines = [] as Array<LineModel>;
@@ -184,12 +178,6 @@ class skopje_pulse_ecoView extends WatchUi.View {
                                 :textColor => color
                             }));
                         }
-                        // if (overallModel.no2 != null) {
-                        //     _lines.add("no2: " + overallModel.no2 + " µg/m3");
-                        // }
-                        // if (overallModel.o3 != null) {
-                        //     _lines.add("o3: " + overallModel.o3 + " μg/m3");
-                        // }
                         if (overallModel.temperature != null) {
                             var temperatureNumber = overallModel.temperature.toNumber();
                             var color = getTemperatureColorValue(temperatureNumber);
@@ -200,15 +188,6 @@ class skopje_pulse_ecoView extends WatchUi.View {
                                 :textColor => color
                             }));
                         }
-                        // if (overallModel.humidity != null) {
-                        //     _lines.add("humidity: " + overallModel.humidity + "%");
-                        // }
-                        // if (overallModel.pressure != null) {
-                        //     _lines.add("pressure: " + overallModel.pressure + " hPa");
-                        // }
-                        // if (overallModel.noiseDba != null) {
-                        //     _lines.add("noise_dba: " + overallModel.noiseDba + " dBA");
-                        // }
                         _lines.add(new LineModel({
                             :text => " ",
                             :textColor => Graphics.COLOR_LT_GRAY,

@@ -46,11 +46,11 @@ class skopje_pulse_ecoApp extends Application.AppBase {
         getOverallService.makeRequest();
     }
 
-    function onPosition(info as Position.Info) as Void {
+    // function onPosition(info as Position.Info) as Void {
         // var myLocation = info.position.toDegrees();
         // System.println("Latitude: " + myLocation[0]); // e.g. 38.856147
         // System.println("Longitude: " + myLocation[1]); // e.g -94.800953
-    }
+    // }
 
     // onStop() is called when your application is exiting
     function onStop(state as Dictionary?) as Void {
