@@ -8,14 +8,17 @@ class GetOverallService {
     public var onSuccess as Method;
     public var onError as Method;
     public var onLoading as Method;
+    public var city as String;
     private var _CACHED_DATE_KEY = "GetOverallService.cachedDate";
     private var _CACHED_DATA_KEY = "GetOverallService.cachedData";
-    private var _CACHE_DURATION_SECONDS = 60 * 15; // 15 Minutes
+    // private var _CACHE_DURATION_SECONDS = 60 * 15; // 15 Minutes
+    private var _CACHE_DURATION_SECONDS = 1; // 15 Minutes
 
-    public function initialize(onSuccess, onError, onLoading) {
+    public function initialize(onSuccess, onError, onLoading, city) {
         self.onSuccess = onSuccess as Method;
         self.onLoading = onLoading as Method;
         self.onError = onError as Method;
+        self.city = city as String;
     }
 
     function mapToOverallModel(data as Dictionary) as OverallModel {
@@ -37,8 +40,8 @@ class GetOverallService {
         var timestampNow = Time.now().value();
         // System.println("onReceive");
         if (responseCode == 200 and data != null) {
-            Storage.setValue(self._CACHED_DATE_KEY, timestampNow);
-            Storage.setValue(self._CACHED_DATA_KEY, data);
+            Storage.setValue(self._CACHED_DATE_KEY + "." + self.city , timestampNow);
+            Storage.setValue(self._CACHED_DATA_KEY + "." + self.city, data);
             var overallModel = self.mapToOverallModel(data);
             self.onSuccess.invoke(overallModel, false, timestampNow);
         } else {
@@ -51,15 +54,15 @@ class GetOverallService {
 
     function makeRequest() as Void {
         var timestampNow = Time.now().value();
-        var cachedDate = Storage.getValue(self._CACHED_DATE_KEY);
+        var cachedDate = Storage.getValue(self._CACHED_DATE_KEY + "." + self.city);
         var cachedData = null;
         if( cachedDate != null ) {
             if ( timestampNow - cachedDate >= self._CACHE_DURATION_SECONDS ) {
                 // expired cache
-                Storage.deleteValue(self._CACHED_DATE_KEY);
-                Storage.deleteValue(self._CACHED_DATA_KEY);
+                Storage.deleteValue(self._CACHED_DATE_KEY + "." + self.city);
+                Storage.deleteValue(self._CACHED_DATA_KEY + "." + self.city);
             } else {
-                cachedData = Storage.getValue(self._CACHED_DATA_KEY);
+                cachedData = Storage.getValue(self._CACHED_DATA_KEY + "." + self.city);
             }
         }
         if( cachedData != null ) {
@@ -69,7 +72,7 @@ class GetOverallService {
         }
 
         self.onLoading.invoke();
-        var url = "https://skopje.pulse.eco/rest/overall"; 
+        var url = "https://" + self.city + ".pulse.eco/rest/overall"; 
         var options = {
             :method => Communications.HTTP_REQUEST_METHOD_GET,
             :headers => {
@@ -80,6 +83,7 @@ class GetOverallService {
         };
 
         // Make the request
+        System.println("Making webrequest against: " + url);
         Communications.makeWebRequest(url, null, options, method(:onReceive));
     }
 }

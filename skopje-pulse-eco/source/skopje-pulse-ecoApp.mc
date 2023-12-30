@@ -13,9 +13,9 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     
     function initialize() {
         AppBase.initialize();
-        _view = new skopje_pulse_ecoView();
+        _view = new skopje_pulse_ecoView(method(:fetchOverallData));
         _settingsDelegate = new SettingsDelegate();
-        viewModel = new ViewModel(true, "", null, null);
+        viewModel = new ViewModel(true, true, "", null, null);
     }
 
     // Return the initial view of your application here
@@ -27,10 +27,24 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     function onStart(state as Dictionary?) as Void {
         // var getAllSensorsService = new GetAllSensorsService(method(:handleOnGetAllSensorsSuccess), method(:handleOnGetAllSensorsError));
         // getAllSensorsService.makeRequest();
-        var getOverallService = new GetOverallService(method(:handleOnGetOverallSuccess), method(:handleOnGetOverallError), method(:handleOnGetOverallLoading));
-        getOverallService.makeRequest();
+        var isOnboarded = getOnboardedValue();
+        if(isOnboarded) {
+            self.fetchOverallData();
+        } else {
+            self.showOnboarding();
+        }
 
         Position.enableLocationEvents(Position.LOCATION_CONTINUOUS, method(:onPosition));
+    }
+
+    function fetchOverallData() {
+        var getOverallService = new GetOverallService(
+            method(:handleOnGetOverallSuccess), 
+            method(:handleOnGetOverallError), 
+            method(:handleOnGetOverallLoading),
+            getCitySettingValue()
+        );
+        getOverallService.makeRequest();
     }
 
     function onPosition(info as Position.Info) as Void {
@@ -44,23 +58,33 @@ class skopje_pulse_ecoApp extends Application.AppBase {
         Position.enableLocationEvents(Position.LOCATION_DISABLE, method(:onPosition));
     }
 
-    function handleOnGetAllSensorsSuccess(sensors as Array<SensorModel>) {
+    function showOnboarding() {
         self.viewModel.loading = false;
+        self.viewModel.showOnboarding = true;
         self.viewModel.error = "";
         self.updateUi();
     }
 
-    function handleOnGetAllSensorsError() {
-        self.viewModel.loading = false;
-        self.viewModel.error = "error happened...";
-        self.updateUi();
-    }
+    // function handleOnGetAllSensorsSuccess(sensors as Array<SensorModel>) {
+    //     self.viewModel.loading = false;
+    //     self.viewModel.showOnboarding = false;
+    //     self.viewModel.error = "";
+    //     self.updateUi();
+    // }
+
+    // function handleOnGetAllSensorsError() {
+    //     self.viewModel.loading = false;
+    //     self.viewModel.showOnboarding = false;
+    //     self.viewModel.error = "error happened...";
+    //     self.updateUi();
+    // }
 
     function handleOnGetOverallSuccess(overallModel as OverallModel, cached as Boolean, cachedDate as Number) {
         if(cached == false) {
             self._view.hideProgressBar();
         }
         self.viewModel.loading = false;
+        self.viewModel.showOnboarding = false;
         self.viewModel.error = "";
         self.viewModel.overallModel = overallModel;
         self.viewModel.cachedDate = cachedDate;
@@ -68,11 +92,13 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     }
 
     function handleOnGetOverallLoading() {
+        System.println("handleOnGetOverallLoading");
         self._view.showProgressBar();
     }
 
     function handleOnGetOverallError(errorMessage as String) {
         self.viewModel.loading = false;
+        self.viewModel.showOnboarding = false;
         self.viewModel.error = errorMessage;
         self._view.hideProgressBar();
         self.updateUi();

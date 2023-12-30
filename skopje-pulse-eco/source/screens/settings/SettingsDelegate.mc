@@ -26,8 +26,9 @@ class SettingsDelegate extends WatchUi.BehaviorDelegate {
         })});
 
         menu.addItem(new WatchUi.MenuItem("City", null, "city", null));
-        menu.addItem(new WatchUi.MenuItem("Caching", null, "caching", null));
+        menu.addItem(new WatchUi.MenuItem("Done", null, "done", null));
         WatchUi.pushView(menu, new SettingsDelegateSettingDelegate(), WatchUi.SLIDE_UP);
+
         return true;
     }
 }
