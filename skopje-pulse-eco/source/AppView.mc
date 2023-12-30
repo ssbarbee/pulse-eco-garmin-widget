@@ -54,45 +54,20 @@ class AppView extends WatchUi.View {
         for (var i = 0; i < _lines.size(); ++i) {
             var font = _lines[i].font != null ? _lines[i].font : Graphics.FONT_TINY;
 
-            var prefixText = _lines[i].prefixText != null ? _lines[i].prefixText : "";
-            var text = _lines[i].text != null ? _lines[i].text : "";
-            var suffixText = _lines[i].suffixText != null ? _lines[i].suffixText : "";
+            renderText({
+                :dc => dc,
+                :prefixText => _lines[i].prefixText,
+                :text => _lines[i].text,
+                :suffixText => _lines[i].suffixText,
+                :prefixTextColor => _lines[i].prefixTextColor,
+                :textColor => _lines[i].textColor,
+                :suffixTextColor => _lines[i].suffixTextColor,
+                :font => font,
+                :x => x,
+                :y => y,
+            });
 
-            var prefixTextColor = _lines[i].prefixTextColor != null ? _lines[i].prefixTextColor : Graphics.COLOR_WHITE;
-            var textColor = _lines[i].textColor != null ? _lines[i].textColor : Graphics.COLOR_WHITE;
-            var suffixTextColor = _lines[i].suffixTextColor != null ? _lines[i].suffixTextColor : Graphics.COLOR_WHITE;
-
-            var prefixTextWidth = dc.getTextWidthInPixels(prefixText, font);
-            var textWidth = dc.getTextWidthInPixels(text, font);
-
-            if(prefixText.length() > 0 and text.length() > 0 and suffixText.length() > 0) {
-                dc.setColor(prefixTextColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(x - prefixTextWidth, y, font, prefixText, Graphics.TEXT_JUSTIFY_LEFT);
-                
-                dc.setColor(textColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(x, y, font, text, Graphics.TEXT_JUSTIFY_LEFT);
-                
-                dc.setColor(suffixTextColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(x + textWidth, y, font, suffixText, Graphics.TEXT_JUSTIFY_LEFT);
-
-                y += dc.getFontHeight(font);
-            }
-            
-            if(prefixText.length() == 0 and text.length() > 0 and suffixText.length() == 0) {
-                dc.setColor(textColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(x, y, font, text, Graphics.TEXT_JUSTIFY_CENTER);
-                y += dc.getFontHeight(font);
-            }
-            
-            if(prefixText.length() == 0 and text.length() > 0 and suffixText.length() > 0) {
-                dc.setColor(textColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(x - textWidth, y, font, text, Graphics.TEXT_JUSTIFY_LEFT);
-                
-                dc.setColor(suffixTextColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(x, y, font, suffixText, Graphics.TEXT_JUSTIFY_LEFT);
-
-                y += dc.getFontHeight(font);
-            }
+            y += dc.getFontHeight(font);
         }
     }
     
@@ -160,7 +135,7 @@ class AppView extends WatchUi.View {
                     if (overallModel != null) {
                         if (overallModel.pm10 != null) {
                             var pm10Number = overallModel.pm10.toNumber();
-                            var color = getPollutionColorValue(pm10Number);
+                            var color = getPollutionPM10ColorValue(pm10Number);
                             _lines.add(new LineModel({
                                 :prefixText => "pm10: ",
                                 :text => overallModel.pm10,
@@ -170,7 +145,7 @@ class AppView extends WatchUi.View {
                         }
                         if (overallModel.pm25 != null) {
                             var pm25Number = overallModel.pm25.toNumber();
-                            var color = getPollutionColorValue(pm25Number);
+                            var color = getPollutionPM25ColorValue(pm25Number);
                             _lines.add(new LineModel({
                                 :prefixText => "pm25: ",
                                 :text => overallModel.pm25,

@@ -1,7 +1,18 @@
 import Toybox.Lang;
 import Toybox.Math;
 
-function getPollutionColorValue(value as Number) {
+
+function convertToPercentage(value as Number, maxValue as Number) {
+    return (value * 100 / maxValue).toNumber();
+}
+
+// pm10
+var PM10_GOOD_AIR_QUALITY_UPPER_BOUND = 20;
+var PM10_MODERATE_AIR_QUALITY_UPPER_BOUND = 50;
+var PM10_BAD_AIR_QUALITY_UPPER_BOUND = 100;
+var PM10_VERY_BAD_AIR_QUALITY_UPPER_BOUND = 180;
+var PM10_MAX_UPPER_BOUND = PM10_VERY_BAD_AIR_QUALITY_UPPER_BOUND;
+function getPollutionPM10ColorValue(value as Number) {
     // Define color 'constants'
     var DARK_GREEN = [0x00, 0x64, 0x00];
     var GREEN = [0x00, 0x80, 0x00];
@@ -11,14 +22,40 @@ function getPollutionColorValue(value as Number) {
 
     // Define gradient segments
     var SEGMENTS = [
-        {:start => 0,  :end => 19,  :startColor => DARK_GREEN, :endColor => GREEN},
-        {:start => 19, :end => 35,  :startColor => GREEN, :endColor => ORANGE},
-        {:start => 35, :end => 68,  :startColor => ORANGE, :endColor => RED},
-        {:start => 68, :end => 100, :startColor => RED, :endColor => DARK_RED}
+        {:start => 0,  :end => convertToPercentage(PM10_GOOD_AIR_QUALITY_UPPER_BOUND, PM10_MAX_UPPER_BOUND),  :startColor => DARK_GREEN, :endColor => GREEN},
+        {:start => convertToPercentage(PM10_GOOD_AIR_QUALITY_UPPER_BOUND, PM10_MAX_UPPER_BOUND), :end => convertToPercentage(PM10_MODERATE_AIR_QUALITY_UPPER_BOUND, PM10_MAX_UPPER_BOUND),  :startColor => GREEN, :endColor => ORANGE},
+        {:start => convertToPercentage(PM10_MODERATE_AIR_QUALITY_UPPER_BOUND, PM10_MAX_UPPER_BOUND), :end => convertToPercentage(PM10_BAD_AIR_QUALITY_UPPER_BOUND, PM10_MAX_UPPER_BOUND),  :startColor => ORANGE, :endColor => RED},
+        {:start => convertToPercentage(PM10_BAD_AIR_QUALITY_UPPER_BOUND, PM10_MAX_UPPER_BOUND), :end => convertToPercentage(PM10_VERY_BAD_AIR_QUALITY_UPPER_BOUND, PM10_MAX_UPPER_BOUND), :startColor => RED, :endColor => DARK_RED}
+    ];
+
+    return getColorValue(SEGMENTS, 0, PM10_MAX_UPPER_BOUND, value);
+}
+
+// pm25
+var PM25_GOOD_AIR_QUALITY_UPPER_BOUND = 10;
+var PM25_MODERATE_AIR_QUALITY_UPPER_BOUND = 35;
+var PM25_BAD_AIR_QUALITY_UPPER_BOUND = 60;
+var PM25_VERY_BAD_AIR_QUALITY_UPPER_BOUND = 110;
+var PM25_MAX_UPPER_BOUND = PM25_VERY_BAD_AIR_QUALITY_UPPER_BOUND;
+function getPollutionPM25ColorValue(value as Number) {
+    // Define color 'constants'
+    var DARK_GREEN = [0x00, 0x64, 0x00];
+    var GREEN = [0x00, 0x80, 0x00];
+    var ORANGE = [0xFF, 0xA5, 0x00];
+    var RED = [0xFF, 0x00, 0x00];
+    var DARK_RED = [0x8B, 0x00, 0x00];
+
+    // Define gradient segments
+    var SEGMENTS = [
+        {:start => 0,  :end => convertToPercentage(PM25_GOOD_AIR_QUALITY_UPPER_BOUND, PM25_MAX_UPPER_BOUND),  :startColor => DARK_GREEN, :endColor => GREEN},
+        {:start => convertToPercentage(PM25_GOOD_AIR_QUALITY_UPPER_BOUND, PM25_MAX_UPPER_BOUND), :end => convertToPercentage(PM25_MODERATE_AIR_QUALITY_UPPER_BOUND, PM25_MAX_UPPER_BOUND),  :startColor => GREEN, :endColor => ORANGE},
+        {:start => convertToPercentage(PM25_MODERATE_AIR_QUALITY_UPPER_BOUND, PM25_MAX_UPPER_BOUND), :end => convertToPercentage(PM25_BAD_AIR_QUALITY_UPPER_BOUND, PM25_MAX_UPPER_BOUND),  :startColor => ORANGE, :endColor => RED},
+        {:start => convertToPercentage(PM25_BAD_AIR_QUALITY_UPPER_BOUND, PM25_MAX_UPPER_BOUND), :end => convertToPercentage(PM25_VERY_BAD_AIR_QUALITY_UPPER_BOUND, PM25_MAX_UPPER_BOUND), :startColor => RED, :endColor => DARK_RED}
     ];
 
     return getColorValue(SEGMENTS, 0, 200, value);
 }
+
 
 function getTemperatureColorValue(value as Number) {
     // Define new color 'constants'
