@@ -3,7 +3,6 @@ import Toybox.Lang;
 import Toybox.WatchUi;
 import Toybox.Communications;
 import Toybox.System;
-import Toybox.Position;
 import Toybox.Activity;
 
 class skopje_pulse_ecoApp extends Application.AppBase {
@@ -34,7 +33,7 @@ class skopje_pulse_ecoApp extends Application.AppBase {
             self.showOnboarding();
         }
 
-        Position.enableLocationEvents(Position.LOCATION_CONTINUOUS, method(:onPosition));
+        // Position.enableLocationEvents(Position.LOCATION_CONTINUOUS, method(:onPosition));
     }
 
     function fetchOverallData() {
@@ -48,14 +47,14 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     }
 
     function onPosition(info as Position.Info) as Void {
-        var myLocation = info.position.toDegrees();
-        System.println("Latitude: " + myLocation[0]); // e.g. 38.856147
-        System.println("Longitude: " + myLocation[1]); // e.g -94.800953
+        // var myLocation = info.position.toDegrees();
+        // System.println("Latitude: " + myLocation[0]); // e.g. 38.856147
+        // System.println("Longitude: " + myLocation[1]); // e.g -94.800953
     }
 
     // onStop() is called when your application is exiting
     function onStop(state as Dictionary?) as Void {
-        Position.enableLocationEvents(Position.LOCATION_DISABLE, method(:onPosition));
+        // Position.enableLocationEvents(Position.LOCATION_DISABLE, method(:onPosition));
     }
 
     function showOnboarding() {

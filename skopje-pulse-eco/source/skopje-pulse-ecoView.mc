@@ -217,16 +217,20 @@ class skopje_pulse_ecoView extends WatchUi.View {
                         if(viewModel.cachedDate != null) {
                             var moment = new Moment(viewModel.cachedDate);
                             var cachedDate = Gregorian.info(moment, Time.FORMAT_LONG);
+                            var citySettingValue = getCitySettingValue();
+                            var citySettingValueCapitaliezed = citySettingValue == null ? "" : citySettingValue.toCharArray()[0].toUpper() + citySettingValue.substring(1, null);
+                            
                             _lines.add(new LineModel({
-                                :text => "Last updated ",
-                                :suffixText => Lang.format("$1$:$2$:$3$", [cachedDate.hour.format("%02d"), cachedDate.min.format("%02d"), cachedDate.sec.format("%02d")]),
+                                :text => citySettingValueCapitaliezed.length() > 0 ? citySettingValueCapitaliezed : "Updated",
+                                :suffixText => Lang.format(" $1$:$2$:$3$", [cachedDate.hour.format("%02d"), cachedDate.min.format("%02d"), cachedDate.sec.format("%02d")]),
                                 :textColor => Graphics.COLOR_DK_GRAY,
                                 :suffixTextColor => Graphics.COLOR_LT_GRAY,
                                 :font => Graphics.FONT_XTINY
                             }));
                         }
+
                         _lines.add(new LineModel({
-                            :text => "powered by",
+                            :text => "powerd by",
                             :suffixText => " pulse.eco",
                             :textColor => Graphics.COLOR_DK_GRAY,
                             :suffixTextColor => Graphics.COLOR_LT_GRAY,
