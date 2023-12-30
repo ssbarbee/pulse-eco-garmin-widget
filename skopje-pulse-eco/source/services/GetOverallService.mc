@@ -75,10 +75,6 @@ class GetOverallService {
         var url = "https://" + self.city + ".pulse.eco/rest/overall"; 
         var options = {
             :method => Communications.HTTP_REQUEST_METHOD_GET,
-            :headers => {
-                "Authorization" => "Basic c3NiYXJiZWU6NE1wY2h0NDdDYVVoazdX",
-                "Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED
-            },
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON 
         };
 
