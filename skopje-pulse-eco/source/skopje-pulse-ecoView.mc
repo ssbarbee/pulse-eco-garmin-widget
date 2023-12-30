@@ -25,6 +25,7 @@ class skopje_pulse_ecoView extends WatchUi.View {
     // loading resources into memory.
     function onShow() as Void {
         var isOnboarded = getOnboardedValue();
+        System.println("onShow isOnboarded: " + isOnboarded);
         var refreshOverall = getRefreshOverall();
         if(isOnboarded and refreshOverall) {
             self._queuedProgressBar = true;
@@ -217,7 +218,7 @@ class skopje_pulse_ecoView extends WatchUi.View {
                             var moment = new Moment(viewModel.cachedDate);
                             var cachedDate = Gregorian.info(moment, Time.FORMAT_LONG);
                             _lines.add(new LineModel({
-                                :text => "Last updated",
+                                :text => "Last updated ",
                                 :suffixText => Lang.format("$1$:$2$:$3$", [cachedDate.hour.format("%02d"), cachedDate.min.format("%02d"), cachedDate.sec.format("%02d")]),
                                 :textColor => Graphics.COLOR_DK_GRAY,
                                 :suffixTextColor => Graphics.COLOR_LT_GRAY,

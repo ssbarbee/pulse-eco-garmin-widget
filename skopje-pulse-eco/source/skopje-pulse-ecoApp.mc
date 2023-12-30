@@ -14,13 +14,13 @@ class skopje_pulse_ecoApp extends Application.AppBase {
     function initialize() {
         AppBase.initialize();
         _view = new skopje_pulse_ecoView(method(:fetchOverallData));
-        _settingsDelegate = new SettingsDelegate();
         viewModel = new ViewModel(true, true, "", null, null);
+        _settingsDelegate = new SettingsDelegate(viewModel);
     }
 
     // Return the initial view of your application here
     function getInitialView() as Array<Views or InputDelegates>? {
-        return [ _view, _settingsDelegate] as Array<Views or InputDelegates>;
+        return [ _view, _settingsDelegate ] as Array<Views or InputDelegates>;
     }
 
     // onStart() is called on application start up
@@ -100,6 +100,7 @@ class skopje_pulse_ecoApp extends Application.AppBase {
         self.viewModel.loading = false;
         self.viewModel.showOnboarding = false;
         self.viewModel.error = errorMessage;
+        self.viewModel.overallModel = null;
         self._view.hideProgressBar();
         self.updateUi();
     }

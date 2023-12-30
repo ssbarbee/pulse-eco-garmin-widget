@@ -10,12 +10,11 @@ import Toybox.WatchUi;
 
 var cityItems as Array<WatchUi.CheckboxMenuItem> = [
     new WatchUi.CheckboxMenuItem("Skopje", null, "skopje", false, {:alignment=>WatchUi.MenuItem.MENU_ITEM_LABEL_ALIGN_LEFT}),
-    new WatchUi.CheckboxMenuItem("Kumanovo", null, "kumanovo", false, {:alignment=>WatchUi.MenuItem.MENU_ITEM_LABEL_ALIGN_LEFT})
+    new WatchUi.CheckboxMenuItem("Strumica", null, "strumica", false, {:alignment=>WatchUi.MenuItem.MENU_ITEM_LABEL_ALIGN_LEFT})
 ];
 var selectedCity = null;
 //! This is the menu input delegate for the settings menu of the application
 class SettingsDelegateSettingDelegate extends WatchUi.Menu2InputDelegate {
-
     //! Constructor
     public function initialize() {
         Menu2InputDelegate.initialize();
@@ -26,6 +25,7 @@ class SettingsDelegateSettingDelegate extends WatchUi.Menu2InputDelegate {
     public function onSelect(item as MenuItem) as Void {
         var id = item.getId() as String;
         if(id.equals("done")) {
+            System.println("onSelect done");
             self.onBack();
             WatchUi.requestUpdate();
             return;
@@ -55,11 +55,30 @@ class SettingsDelegateSettingDelegate extends WatchUi.Menu2InputDelegate {
 
     //! Handle the back key being pressed
     public function onBack() as Void {
-        if(selectedCity != null) {
-            setCityValue(selectedCity);
-            setOnboardedValue(true);
-            setRefreshOverall(true);
-            WatchUi.popView(WatchUi.SLIDE_DOWN);
+        var isOnboarded = getOnboardedValue();
+        System.println("onBack isOnboarded: " + isOnboarded);
+        if(!isOnboarded) {
+            if(selectedCity == null) {
+                WatchUi.showToast("Select a city!", null);
+                return;
+            }
+            if(selectedCity != null) {
+                setCityValue(selectedCity);
+                setRefreshOverall(true);
+                WatchUi.popView(WatchUi.SLIDE_DOWN);
+                return;
+            }
+        }
+        if(isOnboarded) {
+            if(selectedCity != null) {
+                setCityValue(selectedCity);
+                setRefreshOverall(true);
+                WatchUi.popView(WatchUi.SLIDE_DOWN);
+                return;
+            } else {
+                WatchUi.popView(WatchUi.SLIDE_DOWN);
+                return;
+            }
         }
     }
 }
