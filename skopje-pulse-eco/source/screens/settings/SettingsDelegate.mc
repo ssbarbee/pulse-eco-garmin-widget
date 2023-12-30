@@ -29,9 +29,13 @@ class SettingsDelegate extends WatchUi.BehaviorDelegate {
 
         menu.addItem(new WatchUi.MenuItem("City", null, "city", null));
         menu.addItem(new WatchUi.MenuItem("Done", null, "done", null));
-        WatchUi.pushView(menu, new SettingsDelegateSettingDelegate(), WatchUi.SLIDE_UP);
+        WatchUi.pushView(menu, new SettingsDelegateSettingDelegate(method(:onOnboardingFinish)), WatchUi.SLIDE_UP);
 
         return true;
+    }
+
+    public function onOnboardingFinish() {
+        self.viewModel.showOnboarding = false;
     }
 
     //! Handle going to the next view

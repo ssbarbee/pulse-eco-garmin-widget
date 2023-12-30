@@ -15,9 +15,11 @@ var cityItems as Array<WatchUi.CheckboxMenuItem> = [
 var selectedCity = null;
 //! This is the menu input delegate for the settings menu of the application
 class SettingsDelegateSettingDelegate extends WatchUi.Menu2InputDelegate {
+    private var onOnboardingFinish;
     //! Constructor
-    public function initialize() {
+    public function initialize(onOnboardingFinish) {
         Menu2InputDelegate.initialize();
+        self.onOnboardingFinish = onOnboardingFinish as Method;
     }
 
     //! Handle an item being selected
@@ -41,13 +43,17 @@ class SettingsDelegateSettingDelegate extends WatchUi.Menu2InputDelegate {
         var checkMenu = new WatchUi.CheckboxMenu({:title=> new MenuTitle({
             :title => title
         })});
+
         for(var i = 0; i < items.size(); i++) {
-            if(items[i].getId().equals(getCitySettingValue())) {
-                selectedCity = items[i].getId();
-                items[i].setChecked(true);
+            var citySettingValue = getCitySettingValue();
+            var isOnboarded = getOnboardedValue();
+            var menuItem = items[i];
+            if(isOnboarded and menuItem.getId().equals(citySettingValue)) {
+                selectedCity = menuItem.getId();
+                menuItem.setChecked(true);
             }
 
-            checkMenu.addItem(items[i]);
+            checkMenu.addItem(menuItem);
             // add check against storage for initial selection
         }
         WatchUi.pushView(checkMenu, new $.Menu2SampleSubMenuDelegate(), WatchUi.SLIDE_UP);
@@ -65,6 +71,8 @@ class SettingsDelegateSettingDelegate extends WatchUi.Menu2InputDelegate {
             if(selectedCity != null) {
                 setCityValue(selectedCity);
                 setRefreshOverall(true);
+                setOnboardedValue(true);
+                self.onOnboardingFinish.invoke();
                 WatchUi.popView(WatchUi.SLIDE_DOWN);
                 return;
             }
