@@ -6,3 +6,4 @@ prof_*
 .ipynb_checkpoints/
 .idea
 .DS_Store
+node_modules
