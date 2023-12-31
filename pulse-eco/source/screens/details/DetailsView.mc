@@ -86,8 +86,6 @@ class DetailsView extends WatchUi.View {
         if (viewModel.overallModel != null) {
             var overallModel = viewModel.overallModel.values;
             if (overallModel != null) {
-                var x = dc.getWidth() / 2;
-                var y = (dc.getHeight() * 1) / 5;
                 var font = Graphics.FONT_XTINY;
                 if (detailsId == 0 and overallModel.pm10 != null) {
                     var pm10Number = overallModel.pm10.toNumber();

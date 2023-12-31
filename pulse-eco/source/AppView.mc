@@ -179,7 +179,7 @@ class AppView extends WatchUi.View {
                             var citySettingValueCapitaliezed =
                                 citySettingValue == null
                                     ? ""
-                                    : citySettingValue.toCharArray()[0].toUpper() +
+                                    : (citySettingValue.toCharArray() as Array<Char>)[0].toUpper() +
                                       citySettingValue.substring(1, null);
 
                             _lines.add(

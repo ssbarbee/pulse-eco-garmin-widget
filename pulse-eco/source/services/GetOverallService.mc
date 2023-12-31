@@ -22,7 +22,7 @@ class GetOverallService {
     }
 
     function mapToOverallModel(data as Dictionary) as OverallModel {
-        var values = data["values"];
+        var values = data["values"] as Dictionary;
         var overallValuesModel = new OverallValuesModel(
             values["no2"],
             values["o3"],

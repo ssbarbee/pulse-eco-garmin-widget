@@ -20,7 +20,7 @@ class GetAllSensorsService {
             var sensors = new Array<SensorModel>[dataSize];
             // Handle the response data here
             for (var i = 0; i < dataSize; i++) {
-                var sensorData = data[i];
+                var sensorData = data[i] as Dictionary;
                 var sensorModel = new SensorModel(
                     sensorData["sensorId"],
                     sensorData["position"],
